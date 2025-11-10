@@ -1,0 +1,27 @@
+do testing on npc, abilities
+
+split out each .h into a .h and a .cpp
+
+implement enemy
+
+construct unit tests for what I have currently
+
+add more in-depth documenation
+
+
+
+TBI:
+
+enemy - implement next
+
+
+
+inventory
+
+
+scraping
+
+
+looting
+
+game map (follow the tutorial)
