@@ -1,76 +1,46 @@
 #pragma once
 #include <cstdint>
 #include <utility>
-#include <random>
-typedef std::uint32_t stat_t; //unsinged 32 int for stat_ts (damage can be > 16 int)
+#include <iostream>     // for std::cout in levelUp()
 
+// Type alias for character stats (32-bit unsigned integer)
+using stat_t = std::uint32_t;
+
+/**
+ * @brief Holds base combat statistics for an entity (damage, armor, level).
+ * 
+ * Provides basic manipulation methods for increasing, retrieving, and 
+ * leveling up stats. Damage values are represented as a range (min, max).
+ */
 class StatBlock {
-    std::pair<stat_t, stat_t> damage;
-    stat_t armor;
-    stat_t level;
-    
-    public:
+private:
+    std::pair<stat_t, stat_t> damage;  // Damage range (min, max)
+    stat_t armor;                      // Defensive stat
+    stat_t level;                      // Current level of the entity
 
-    StatBlock() : damage({0, 0}), armor{1u}, level{1u} {}
-    
-        explicit StatBlock(std::pair<stat_t, stat_t> dmg, stat_t arm, stat_t lvl)
-            : damage(dmg), armor(arm), level(lvl) //initialiser list. damage and armor are constructed directly with values
-        {
+public:
+    /// Default constructor initializes all values to base starting stats
+    StatBlock();
 
-        }
+    /// Parameterized constructor
+    StatBlock(std::pair<stat_t, stat_t> dmg, stat_t arm, stat_t lvl);
 
-        std::pair<stat_t, stat_t> getDamage() const { return damage; }
-        stat_t getArmor() const { return armor; }
-        stat_t getLevel() const { return level; }
+    // ----- Getters -----
+    [[nodiscard]] std::pair<stat_t, stat_t> getDamageRange() const;
+    [[nodiscard]] stat_t getArmor() const;
+    [[nodiscard]] stat_t getLevel() const;
 
-        void setDamage(const std::pair<stat_t, stat_t>& inDamage)
-        {
-            if (inDamage.first >= 0)  damage.first  = inDamage.first;
-            if (inDamage.second >= 0) damage.second = inDamage.second;
-            if (damage.first > damage.second) //if damage is not in ascending order, swap
-                std::swap(damage.first, damage.second);
-        }
+    // ----- Setters -----
+    void setDamage(const std::pair<stat_t, stat_t>& inDamage);
+    void setArmor(stat_t inArmor);
+    void setLevel(stat_t inLevel);
 
-        void setArmor(const stat_t& inArmor)
-        {
-            if (inArmor >= 0) armor = inArmor;
-        }
+    // ----- Increment Methods -----
+    void increaseDamage(const std::pair<stat_t, stat_t>& dmg);
+    void increaseArmor(stat_t arm);
+    void levelUp();
 
-        void setLevel(const stat_t& inLevel)
-        {
-            if (inLevel >= 0) level = inLevel;
-        }
-
-        void increaseDamage(const std::pair<stat_t, stat_t>& dmg) //pass by reference. New dmg object is NOT made, instead im accessing the object in memory directly
-        {
-            damage.first += dmg.first;
-            damage.second += dmg.second;
-        }
-
-        void increaseArmor(const stat_t& arm) //const stat_t& means no copy and no modify
-        {
-            armor += arm;
-        }
-
-        void levelUp()
-        {
-            level++;
-            armor *= 1.2;
-            damage.first *= 1.2;
-            damage.second *= 1.2;
-            std::cout << "Leveled Up! You are now level " << level << '\n';
-        }
-
-        stat_t getDamage()
-        {
-            static std::random_device rd;
-            static std::mt19937 gen(rd());
-            std::uniform_int_distribution<stat_t> dist(damage.first, damage.second);
-            return dist(gen);
-        }
-
-
+    // ----- Utility -----
+    /// Returns a random damage roll between min and max
+    [[nodiscard]] stat_t rollDamage() const;
 };
-
-
-

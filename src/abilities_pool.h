@@ -2,11 +2,11 @@
 #include <vector>
 #include <random>
 #include <algorithm>
-//holds all player abilities
-//getrandomability
-//has abiliti
+#include <utility>
+//AbilitiesPool allows the player to gain new spells upon level up. It holds a static vector of pre-built abilities
+//Upon level up, a random ability is pushed to the player's available spells.
 
-class AbiltiesPool {
+class AbilitiesPool {
 public:
     AbilitiesPool() {
         loadAllAbilities();
@@ -24,7 +24,7 @@ public:
 
         if (available.empty()) {
             //if all abilities are learned
-            return Abilities("None", {0, 0}, 0, 0, 0, ability_t::INSTANT);
+            return Abilities();
         }
 
         static thread_local std::mt19937 gen(std::random_device{}());
@@ -36,7 +36,8 @@ private:
 
     void loadAllAbilities() {
         allAbilities = {
-            Abilities("Fireball", {100, 150}, 3, 2, 50, ability_t::CAST),
+            //name, dmgrng, cd, casttime, 
+            Abilities("Fireball", std::make_pair(100u, 150u), 3, 2, 50, ability_t::CAST),
             Abilities("Frostbolt", {80, 120}, 2, 2, 40, ability_t::CAST),
             Abilities("Arcane Missiles", {50, 60}, 5, 5, 60, ability_t::CHANNEL),
             Abilities("Ice Lance", {40, 70}, 1, 0, 20, ability_t::INSTANT),

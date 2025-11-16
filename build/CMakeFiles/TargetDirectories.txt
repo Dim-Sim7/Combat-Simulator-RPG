@@ -1,0 +1,5 @@
+/home/dim__sim/workspace/warcraft_roguelike/build/CMakeFiles/test_stat_block.dir
+/home/dim__sim/workspace/warcraft_roguelike/build/CMakeFiles/test_pointwell.dir
+/home/dim__sim/workspace/warcraft_roguelike/build/CMakeFiles/test_entity.dir
+/home/dim__sim/workspace/warcraft_roguelike/build/CMakeFiles/edit_cache.dir
+/home/dim__sim/workspace/warcraft_roguelike/build/CMakeFiles/rebuild_cache.dir

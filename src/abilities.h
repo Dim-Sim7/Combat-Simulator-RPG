@@ -1,16 +1,17 @@
 #pragma once
 #include <cstdint>
 #include <utility>
+#include <random>
 
 typedef std::uint32_t damage_t;
-enum class AbilityType {
+enum class ABILITYTYPE {
     INSTANT,
     CAST,
     CHANNEL,
     DOT,
     HEAL
 };
-typedef AbilityType ability_t;
+typedef ABILITYTYPE ability_t;
 
 class Abilities {
 public:
@@ -19,31 +20,33 @@ public:
     //DEFAULT CONSTRUCTOR
     Abilities()
         : name{""}, amountRange({0, 0}), cd{0}, castTime{0}, 
-          type(AbilityType::INSTANT), lastUsedTime{0}, duration{0} {}
+           lastUsedTime{0}, duration{0}, type(ABILITYTYPE::INSTANT) {}
 
     //PARAMETER CONSTRUCTOR
     Abilities(const std::string& nameInit,
-    std::pair<damage_t, damage_t>& amountRangeInit,
-    u_int8_t& cdInit,
-    u_int8_t& castTimeInit,
-    ability_t typeInit,
-    float durationInit = 0.0f)
-        : name(nameInit), amountRange(amountRangeInit), cd(cdInit), castTime(castTimeInit), type(typeInit), duration(durationInit), lastUsedTime(0)
+    const std::pair<damage_t, damage_t>& amountRangeInit,
+    u_int8_t cdInit,
+    u_int8_t castTimeInit,
+    float durationInit = 0.0f,
+    ability_t typeInit = ability_t::INSTANT)
+        : name(nameInit), amountRange(amountRangeInit), cd(cdInit), castTime(castTimeInit), lastUsedTime(0), duration(durationInit), type(typeInit)
         {}
 
-    damage_t getDamage() const
+    damage_t rollDamage() const
     {
         static thread_local std::mt19937 gen(std::random_device{}());
         std::uniform_int_distribution<damage_t> dist(amountRange.first, amountRange.second);
         return dist(gen);
     }
 
+    const std::pair<damage_t, damage_t>& getAmountRange() const { return amountRange; }
+
     bool isOffCD(float currentTime) const {
         return (currentTime - lastUsedTime) >= cd;
     }
 
     void use(float currentTime) {
-        lastUsedTIme = currentTime;
+        lastUsedTime = currentTime;
     }
     
     const std::string& getName() const { return name; }

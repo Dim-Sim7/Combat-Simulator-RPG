@@ -1,27 +1,31 @@
-do testing on npc, abilities
-
-split out each .h into a .h and a .cpp
-
-implement enemy
-
-construct unit tests for what I have currently
-
-add more in-depth documenation
 
 
 
-TBI:
 
-enemy - implement next
+combat system:
+
+real-time
+
+what does the player do?
+
+choose to auto-attack, cast spell, use item, run away
+
+what does the enemy do?
+
+    ai combat. It randomly chooses to auto attack or cast. if low on health it heals or uses potion.
+    if npc is humanoid it will run away at low health (run away, 10% chance to escape combat. While running, enemy cannot use an action)
 
 
+what methods do i need?
 
-inventory
+    battleLoop (player, enemy)
 
+    while either not dead
 
-scraping
+    **need to figure out how to listen to events from player (what action they chose to do)
 
+    enemy will continually be doing attacks
 
-looting
+    need to determine if a spell is off cooldown, if they can attack (based on weapon speed)
 
-game map (follow the tutorial)
+    when an enemy dies, the player can loot it. Can drop gold, potions or other things based off the loot table of the npc

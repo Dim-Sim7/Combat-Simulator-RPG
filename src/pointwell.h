@@ -1,65 +1,42 @@
 #pragma once
 #include <cstdint>
 
+//Type alias for pointwell type
 typedef std::uint32_t point_t;
 
+/**
+ * @brief holds pointwell mechanics for an entity.
+ * 
+ * A well can be emptied but never hold more than its max.
+ * Implements a number management system that is similar to this.
+ * Useful for HP, MP
+ */
 class PointWell {
-    public:
+public:
+    //default constructor
+    PointWell();
 
-        PointWell() 
-            : pointMax(1u), pointCurrent(1u) {}
+    //parameter constructor
+    explicit PointWell (point_t inMax, point_t inCurrent);
+    // ----- Getters -----
+    [[nodiscard]] point_t getMax() const; //const means this function won't change any member variables
+    [[nodiscard]] point_t getCurrent() const;
 
+    //// ----- Setters -----
+    bool setMax(const point_t& newMax);
 
-        explicit PointWell (point_t inMax, point_t inCurrent)
-            : pointMax(1u), pointCurrent(1u)
-        {
-            setMax(inMax);
-            setCurrent(inCurrent);
+    bool setCurrent(const point_t& newCurrent);
 
-            if(pointCurrent > pointMax)
-                pointCurrent = pointMax;
-        }
+    // ----- Utility -----
 
-        point_t getMax() const { return pointMax; } //const means this function won't change any member variables
-        point_t getCurrent() const { return pointCurrent; }
+    //reduce current point, returns 0 if reduction is more than current
+    void reduceCurrent(const point_t& amount);
 
-        bool setMax(const point_t& newMax)
-        {
-            if (newMax < 1)
-                return false;
+    //increase current point, returns max points if increase + current is more than max
+    void increaseCurrent(const point_t& amount);
 
-            pointMax = newMax;
-
-            if (pointCurrent > newMax)
-                pointCurrent = newMax;
-
-            return true;
-        }
-
-        bool setCurrent(const point_t& newCurrent)
-        {
-            if (newCurrent < 1)
-                return false;
-            
-            pointCurrent = (newCurrent > pointMax) ? pointMax : newCurrent;
-            return true;
-        }
-
-        void reduceCurrent(const point_t& amount)
-        {
-            pointCurrent = (amount > pointCurrent) ? 0 : pointCurrent -= amount;
-        }
-
-        void increaseCurrent(const point_t& amount)
-        {
-            if ((pointCurrent + amount) > pointMax)
-                pointCurrent = pointMax;
-            else
-                pointCurrent += amount;
-        }
-
-    private:
-        point_t pointMax;
-        point_t pointCurrent;
+private:
+    point_t pointMax; //maximum of th well
+    point_t pointCurrent; //current points
 
 };

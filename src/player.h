@@ -2,13 +2,14 @@
 
 #include "entity.h"
 #include "npc.h"
+#include "abilities_pool.h"
 #include <cstdint>
 #include <random>
 
 typedef std::uint64_t exp_t;
 
 //player class. Handles playable character. Attacking, cast spells, leveling, death
-class Player: public Entity, public AbilitiesPool {
+class Player: public Entity {
 
     public:
         Player() : Entity(), currEXP(0u), expToLevel(100u) {}
@@ -34,20 +35,12 @@ class Player: public Entity, public AbilitiesPool {
             }
         }
 
-        std::string getEntityName() override { return name; }
-
-        void setEntityName(const std::string& inName) 
-        {
-            name = inName;
-        }
-
-
         void attack(Entity& target, float currentTime) override //attack with base damage, will always have a target
         {
             // Prevent attacking before the next swing
             if (currentTime < nextAutoAttackTime)
                 return;
-            damage_t damage = stats.getDamage();
+            damage_t damage = stats.rollDamage();
             if (isCrit())
                 damage *= 2;
             target.takeDamage(damage);
@@ -64,7 +57,7 @@ class Player: public Entity, public AbilitiesPool {
 
         void castSpell(Entity* target, Abilities& spell, float currentTime) override //attack with spell, might not always be targeted (aoe, buff)
         {
-            if (!spell.isReady(currentTime)) {
+            if (!spell.isOffCD(currentTime)) {
                 std::cout << spell.getName() << " is on cooldown!\n";
                 return;
             }
@@ -108,7 +101,8 @@ class Player: public Entity, public AbilitiesPool {
     private:
         exp_t currEXP;
         exp_t expToLevel;
-        
+        AbilitiesPool aPool;
+        Inventory inventory;
 
         void onDeath() override
         {
@@ -118,7 +112,7 @@ class Player: public Entity, public AbilitiesPool {
         void levelUp()
         {
             stats.levelUp();
-            static AbilitiesPool aPool;
+            
             Abilities newAbility = aPool.getRandomAbility(abilities);
 
             if (newAbility.getName() != "None") {
