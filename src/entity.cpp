@@ -65,4 +65,88 @@ bool Entity::isCrit()
         
 }
 
+void Entity::attack(Entity& target, float currentTime) //attack with base damage, will always have a target
+{
+    // Prevent attacking before the next swing
+    if (currentTime < nextAutoAttackTime)
+        return;
+    damage_t damage = stats.rollDamage();
+    if (isCrit())
+        damage *= 2;
+    target.takeDamage(damage);
+
+    std::cout << name << " hits " << target.getEntityName()
+        << " for " << damage << " damage!\n";
+
+    // Schedule next swing
+    nextAutoAttackTime = currentTime + attackSpeed;
+
+    // Trigger global cooldown
+    nextGlobalCooldownEnd = currentTime + globalCooldown;
+}
+
+void Entity::castSpell(Entity* target, Abilities& spell, float currentTime) //attack with spell, might not always be targeted (aoe, buff)
+{
+    if (!spell.isOffCD(currentTime)) 
+    {
+        std::cout << spell.getName() << " is on cooldown!\n";
+        return;
+    }
+
+    if (currentTime < nextGlobalCooldownEnd)
+    {
+        std::cout << "Not ready yet\n";
+        return;
+    }
+    
+    //Instant spell
+    if (spell.getType() == ABILITYTYPE::INSTANT)
+    {
+        spell.use(currentTime);
+        damage_t damage = spell.getDamage();
+        if (isCrit())
+            damage *=2;
+        target->takeDamage(damage);
+        
+        std::cout << name << " cast " << spell.getName()
+        << " on " << target->getEntityName()
+        << " for " << damage << " damage!\n";
+        nextGlobalCooldownEnd = currentTime + globalCooldown;
+    }
+
+    cast.isCasting = true;
+    cast.castStart = currentTime;
+    cast.castEnd = currentTime + spell.getCastTime();
+    cast.spell = &spell;
+    cast.target = target;
+    std::cout << name << " begins casting " 
+                << spell.getName() 
+                << " (" << spell.getCastTime() << "s)" << "\n";
+
+}
+
+
+void Entity::takeDamage(const damage_t& damage)
+{
+    float reduction = calcDamageReduction();
+    damage_t finalDamage = static_cast<damage_t>(damage * (1.0f - reduction));
+    HP.reduceCurrent(finalDamage);
+    if (isDead())
+        onDeath();
+}
+
+void Entity::heal(const damage_t& heal) 
+{
+    HP.increaseCurrent(heal);
+}
+
+float Entity::calcDamageReduction() const 
+{
+    float armor = static_cast<float>(stats.getArmor());
+    float reduction = armor / (armor + 400.0f + (85.0f * stats.getLevel()));
+    return reduction;
+}
+
+
+
 

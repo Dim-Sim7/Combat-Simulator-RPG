@@ -7,6 +7,14 @@
 #include <vector>
 #include <random>
 
+struct CastState {
+    bool isCasting = false;
+    float castStart = 0.0f;
+    float castEnd = 0.0f;
+    Abilities* spell = nullptr;
+    Entity* target = nullptr;
+};
+    
 //Typedef for damage type
 typedef uint32_t damage_t;
 /**
@@ -47,12 +55,13 @@ public:
     std::string getEntityName() 
     void setEntityName(const std::string& inName);
     
-    virtual void attack(Entity& target, float currentTime) = 0;
-    virtual void castSpell(Entity* target, Abilities& spell, float currentTime) = 0;
+    void attack(Entity& target, float currentTime) = 0;
+    void castSpell(Entity* target, Abilities& spell, float currentTime) = 0;
 
-    virtual void takeDamage(const damage_t& damage) = 0;
-    virtual void heal(const damage_t& heal) = 0;
-    virtual void onDeath() = 0;
+    void takeDamage(const damage_t& damage) = 0;
+    float calcDamageReduction() const = 0;
+    void heal(const damage_t& heal) = 0;
+    void onDeath() = 0;
 
     double getNextAutoAttackTime() const;
     void setNextAutoAttackTime(double t);
@@ -68,8 +77,8 @@ protected:
     PointWell HP; //unique ptr manages each object individually and makes sure it gets deleted in mem when out of scope
     std::vector<Abilities> abilities;
     std::string name;
-    
-    
+    CastState cast;
+
     
     double nextAutoAttackTime = 0.0;
     double nextGlobalCooldownEnd = 0.0;

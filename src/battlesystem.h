@@ -20,7 +20,7 @@ class BattleSystem
 public:
     BattleSystem() 
     {
-        startTime = std::chrono::steady_clock::now()
+        startTime = std::chrono::steady_clock::now();
         gcdEndTime = 0.f;
     }
 
@@ -50,7 +50,21 @@ public:
         {
             float now = getTime();
 
-            if (enemyAI)
+            
+            //Handle player spell casting
+            if (player.cast.isCasting && now >= player.cast.castEnd)
+            {
+                handleSpellCast(&player, now);
+            }
+
+            //Handle enemy spell casting
+            if (enemy.cast.isCasting && now >= enemy.cast.castEnd)
+            {
+                handleSpellCast(&enemy, now);
+            }
+
+            //Update enemyAI if not casting
+            if (!enemy.cast.isCasting && enemyAI)
                 enemyAI->update(now);
 
             if (enemy.hasFledCombat())
@@ -63,11 +77,22 @@ public:
             Command cmd;
             while (popCommand(cmd))
             {
-                handleCommand(player, enemy, cmd, now);
+                // Player cannot issue new actions while casting
+                if (!player.cast.isCasting)
+                    handleCommand(player, enemy, cmd, now);
             }
 
-            if (player.isDead() || enemy.isDead())
+            if (enemy.isDead())
             {
+                player.gainExp(enemy.expOnDeath());
+                enemy.onDeath();
+                player.addLoot(enemy.dropLoot());
+                running = false;
+            }
+
+            if (player.isDead())
+            {
+                player.onDeath();
                 running = false;
             }
             // 16ms delay (~60 FPS loop)
@@ -105,7 +130,7 @@ private:
     void pushCommand(PlayerCommand command, float currentTime, const std::string& data = "")
     {
         std::lock_guard<std::mutex> lock(commandMutex); //mutex prevents multiple threads from accessing queue at the same time
-        commandQueue.push({type, data, currentTime});
+        commandQueue.push({command, data, currentTime});
     }
 
     bool popCommand(Command& out)
@@ -218,6 +243,56 @@ private:
         }
     }
 
+    void handleSpellCast(Entity* caster, float now)
+    {
+        if (!caster->cast.isCasting || caster->cast.spell == nullptr)
+            return;
+
+        Abilities* spell = caster.cast.spell;
+        Entity* target = caster.cast.target;
+
+        // finish spell cast
+        spell->use(now);
+
+        //Damage spell
+        if (spell->isOffensive())
+        {
+            damage_t dmg = spell->rollDamage();
+            if (caster.isCrit()) dmg *= 2;
+
+            target->takeDamage(dmg);
+
+            std::cout << caster.getEntityName() << " casts "
+                        << spell->getName()
+                        << " for " << dmg << " damage!\n";
+        }
+        else if (!(spell->isOffensive()))
+        {
+            damage_t heal = spell->rollDamage();
+            if (caster.isCrit()) heal *= 2;
+
+            caster->heal(heal);
+
+            std::cout << caster.getEntityName() << " casts "
+                        << spell->getName()
+                        << " that heals themselves for " << heal << "\n";            
+        }
+        else
+        {
+            std::cout << caster->getEntityName()
+                  << " finishes casting " << spell->getName() << ".\n";
+        }
+
+        
+        //trigger gcd
+        gcdEndTime = now + 1.5f;
+
+        //Clear cast state
+        caster.cast.isCasting = false;
+        caster.cast.spell = nullptr;
+        caster.cast.target = nullptr;
+    }
+
     // ============================================================
     // COMBAT EXECUTION
     // ============================================================
@@ -251,7 +326,11 @@ private:
             if (sp.getName() == name)
             {
                 player.castSpell(&enemy, sp, now);
-                gcdEndTime = now + 1.5f;
+
+                if (sp.getType() == ABILITYTYPE::INSTANT)
+                    gcdEndTime = now + 1.5f;
+
+
                 return;
             }
         }

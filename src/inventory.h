@@ -44,11 +44,6 @@ public:
 
     //implement get all consumables, weapons, armor, jewelery
 
-
-
-    
-
-
 private:
     std::vector<Item> items;
     uint32_t gold;

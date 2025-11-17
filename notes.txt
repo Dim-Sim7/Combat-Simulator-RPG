@@ -1,31 +1,17 @@
 
 
+when an enemy dies, the player can loot it. Can drop gold, potions or other things based off the loot table of the npc
 
 
-combat system:
 
-real-time
+NEED TO IMPLEMENT:
 
-what does the player do?
+LOOT TABLE. On enemy death, drop randomised loot
+player loot function from dead enemy
 
-choose to auto-attack, cast spell, use item, run away
+different item types.
+testing of what i already have
+figure out how to render a window with char sprites and random dungeons
+render enemies. build a simple UI for combat, inventory, character sheet, equip items, loot slain enemies, loot chests.
 
-what does the enemy do?
-
-    ai combat. It randomly chooses to auto attack or cast. if low on health it heals or uses potion.
-    if npc is humanoid it will run away at low health (run away, 10% chance to escape combat. While running, enemy cannot use an action)
-
-
-what methods do i need?
-
-    battleLoop (player, enemy)
-
-    while either not dead
-
-    **need to figure out how to listen to events from player (what action they chose to do)
-
-    enemy will continually be doing attacks
-
-    need to determine if a spell is off cooldown, if they can attack (based on weapon speed)
-
-    when an enemy dies, the player can loot it. Can drop gold, potions or other things based off the loot table of the npc
+spellbook to display spells.

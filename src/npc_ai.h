@@ -17,7 +17,7 @@ public:
 
         float hpPct = npc->getCurrentHP() / npc->getMaxHP();
 
-        // HUMANOID escape logic
+        //escape logic
         if (hpPct < 0.15f)
             state = AIState::Running;
         
