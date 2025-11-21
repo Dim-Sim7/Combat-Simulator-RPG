@@ -1,10 +1,43 @@
+Last implemented:
+    cast time waiting for spells
+    refactored attack, cast spell and others from npc, player into entity base class (they were the same)
+    finish battlesystem.h
+
+
+
+
+Items
+ each item modifies some stat.
+each item has a statModifier struct. It changes the struct based on the items effect
+(health pot, increase health) (armor, increase armor + increase maxHealth)
+
+
+
+
+
+
 
 
 when an enemy dies, the player can loot it. Can drop gold, potions or other things based off the loot table of the npc
 
+Implement loot function, equip slots,
 
+need to test what I have now (will do after making items)
+when I equip an item I need to adjust the player's stats - can do this in a class called EquipSlots
+
+a player has equip slots. Items in the equip slots modify the player's stats.
+
+a character sheet holds all the equipslots. When an item is equipped, the player's stats are updated (how? a continuously running method, or an update method?)
+
+IMPLEMENT STATSMOD, BASESTATS
+
+INVENTORY:
+    add, remove, print
 
 NEED TO IMPLEMENT:
+
+item types (weapon, armor, consumable)
+inventory
 
 LOOT TABLE. On enemy death, drop randomised loot
 player loot function from dead enemy
