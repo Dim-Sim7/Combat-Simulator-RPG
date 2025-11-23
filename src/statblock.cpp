@@ -6,55 +6,55 @@
 StatBlock::StatBlock() 
     : damage({0, 0}), armor{1u}, level{1u} {}
 
-StatBlock::StatBlock(std::pair<stat_t, stat_t> dmg, stat_t arm, stat_t lvl)
+StatBlock::StatBlock(std::pair<int, int> dmg, int arm, int lvl)
     : damage(dmg), armor(arm), level(lvl) {}
 
 
 // ----- Getters -----
-std::pair<stat_t, stat_t> StatBlock::getDamageRange() const { return damage; }
-stat_t StatBlock::getArmor() const { return armor; }
-stat_t StatBlock::getLevel() const { return level; }
+std::pair<int, int> StatBlock::getDamageRange() const { return damage; }
+int StatBlock::getArmor() const { return armor; }
+int StatBlock::getLevel() const { return level; }
 
 
 // ----- Setters -----
-void StatBlock::setDamage(const std::pair<stat_t, stat_t>& inDamage) {
+void StatBlock::setDamage(const std::pair<int, int>& inDamage) {
     damage = inDamage;
     if (damage.first > damage.second)
         std::swap(damage.first, damage.second);
 }
 
-void StatBlock::setArmor(stat_t inArmor) {
+void StatBlock::setArmor(int inArmor) {
     armor = inArmor;
 }
 
-void StatBlock::setLevel(stat_t inLevel) {
+void StatBlock::setLevel(int inLevel) {
     level = inLevel;
 }
 
 
 // ----- Increment Methods -----
-void StatBlock::increaseDamage(const std::pair<stat_t, stat_t>& dmg) {
+void StatBlock::increaseDamage(const std::pair<int, int>& dmg) {
     damage.first  += dmg.first;
     damage.second += dmg.second;
 }
 
-void StatBlock::increaseArmor(stat_t arm) {
+void StatBlock::increaseArmor(int arm) {
     armor += arm;
 }
 
 void StatBlock::levelUp() {
     ++level;
-    armor = static_cast<stat_t>(armor * 1.2);
-    damage.first  = static_cast<stat_t>(damage.first * 1.2);
-    damage.second = static_cast<stat_t>(damage.second * 1.2);
+    armor = static_cast<int>(armor * 1.2);
+    damage.first  = static_cast<int>(damage.first * 1.2);
+    damage.second = static_cast<int>(damage.second * 1.2);
     std::cout << "Leveled Up! You are now level " << level << '\n';
 }
 
 
 // ----- Utility -----
-stat_t StatBlock::rollDamage() const {
+int StatBlock::rollDamage() const {
     static std::random_device rd;
     static std::mt19937 gen(rd());
-    std::uniform_int_distribution<stat_t> dist(damage.first, damage.second);
+    std::uniform_int_distribution<int> dist(damage.first, damage.second);
     return dist(gen);
 }

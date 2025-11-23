@@ -3,42 +3,70 @@
 #include <random>
 #include <iostream>
 #include <memory>
+#include "statsmod.h"
+#include "statblock.h"
 
 enum class ITEMTYPE { WEAPON, ARMOR, CONSUMABLE, MISC }
+
+struct ItemDefinition {
+    std::string name;
+    int id;
+    ITEMTYPE type;
+    bool stackable;
+    int maxStack;
+    StatModifier baseStats;
+};
 
 class Item:
 {
 public:
 
 
-    Item() : name(""), id(0), stackSize(0), stackable(false) {}
+    Item();
+    Item(std::string& inName, int inId, ITEMTYPE inType, int inStackSize, bool inStackable);
 
-    Item(std::string inName, int inId, int inStackSize, bool inStackable)
-    : name(inName), id(inId), stackSize(inStackSize), stackable(inStackable) {}
+    virtual ~Item();
+
+    const std::string getName();
+    const int getID();
+    const int getStackSize();
+    const bool isStackable();
+    const ITEMTYPE getItemType();
+
+    void setName(std::string inName);
+    void setID(int inID);
+    void setType(ITEMTYPE inType);
+    void setStackSize(int inStackSize);
+    void setStackable(bool inStackable);
+
+    void incrementStackSize();
+    void decrementStackSize();
+
+    bool noMoreStackSize();
 
 
+    const StatModifier& getStatModifier() const;
 
-    std::string getName() { return name; }
-    int getID() { return id; }
-    int getStackSize() { return stackSize; }
-    bool getStackable() { return stackable; }
+    void setDamageBuff(std::pair<int, int> inDamage);
 
-    void setName(std::string inName) { name = inName; }
-    void setID(int inID) { id = inID; }
-    void setStackSize(int inStackSize) { stackSize = inStackSize; }
-    void setStackable(bool inStackable) { stackable = inStackable; }
+    void setSpeedBuff(float inSpeed);
+    void setArmorBuff(int inArmor);
 
-    void incrementStackSize() { ++stackSize; }
-    void decrementStackSize() { --stackSize; }
+    void setHealthBuff(point_t inHealth);
 
-    bool noMoreStackSize() { return stackSize == 0; }
+    [[nodiscard]] std::pair<int, int> getDamageBuff() const;
 
-    virtual void use() = 0;
-    virtual ~Item() = default;
+    [[nodiscard]] float getSpeedBuff() const;
+
+    [[nodiscard]] int getArmorBuff() const;
+
+    [[nodiscard]] point_t getHealthBuff() const;
 
 private:
     std::string name;
     int id;
+    ITEMTYPE type;
     int stackSize;
     bool stackable;
+    StatModifier statMod;
 };

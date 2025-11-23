@@ -1,19 +1,19 @@
-Last implemented:
-    cast time waiting for spells
-    refactored attack, cast spell and others from npc, player into entity base class (they were the same)
-    finish battlesystem.h
+LOOT TABLE:
+    assign drop chances based on item
+    given the level on a monster, "drop" appropriate loot
+    loot data is saved on a csv. 
 
+EQUIPSLOTS:
+    a player can open their inventory and equip loot or use consumables
+    a player can look at their equippable slots (Head, cloak etc...)
 
+After these, need to do major testing and documentation on code
 
+need to make sure i can make players, enemies and that combat works. (can just do in the command line at this point)
+After all this, everything is pretty much done. Just need to link python scraper, save npc, item and spell data into csvs. Csvs need to be in a specific structure of headers
+Then need to figure out how to make the gameplay.
 
-Items
- each item modifies some stat.
-each item has a statModifier struct. It changes the struct based on the items effect
-(health pot, increase health) (armor, increase armor + increase maxHealth)
-
-
-
-
+Eventually, I want to render a simple pointcloud game (idk if possible at this point). Move through random dungeons, battle point cloud enemies, open chests, level up etc...
 
 
 
@@ -36,13 +36,11 @@ INVENTORY:
 
 NEED TO IMPLEMENT:
 
-item types (weapon, armor, consumable)
 inventory
 
 LOOT TABLE. On enemy death, drop randomised loot
 player loot function from dead enemy
 
-different item types.
 testing of what i already have
 figure out how to render a window with char sprites and random dungeons
 render enemies. build a simple UI for combat, inventory, character sheet, equip items, loot slain enemies, loot chests.

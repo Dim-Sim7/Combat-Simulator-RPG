@@ -6,8 +6,8 @@
 Entity::Entity() :  stats(), HP(), abilities(), name(""){} //initialiser default list construction
 
 Entity::Entity(const StatBlock& statsInit, 
-    const point_t& hpInitCurr, 
-    const point_t& hpInitMax, 
+    const int& hpInitCurr, 
+    const int& hpInitMax, 
     const std::vector<Abilities>& abilitiesInit,
     const std::string& inName)
     : stats(statsInit), HP(hpInitMax, hpInitCurr), abilities(abilitiesInit), name(inName)
@@ -70,7 +70,7 @@ void Entity::attack(Entity& target, float currentTime) //attack with base damage
     // Prevent attacking before the next swing
     if (currentTime < nextAutoAttackTime)
         return;
-    damage_t damage = stats.rollDamage();
+    int damage = stats.rollDamage();
     if (isCrit())
         damage *= 2;
     target.takeDamage(damage);
@@ -103,7 +103,7 @@ void Entity::castSpell(Entity* target, Abilities& spell, float currentTime) //at
     if (spell.getType() == ABILITYTYPE::INSTANT)
     {
         spell.use(currentTime);
-        damage_t damage = spell.getDamage();
+        int damage = spell.getDamage();
         if (isCrit())
             damage *=2;
         target->takeDamage(damage);
@@ -112,6 +112,7 @@ void Entity::castSpell(Entity* target, Abilities& spell, float currentTime) //at
         << " on " << target->getEntityName()
         << " for " << damage << " damage!\n";
         nextGlobalCooldownEnd = currentTime + globalCooldown;
+        return;
     }
 
     cast.isCasting = true;
@@ -126,16 +127,16 @@ void Entity::castSpell(Entity* target, Abilities& spell, float currentTime) //at
 }
 
 
-void Entity::takeDamage(const damage_t& damage)
+void Entity::takeDamage(const int& damage)
 {
     float reduction = calcDamageReduction();
-    damage_t finalDamage = static_cast<damage_t>(damage * (1.0f - reduction));
+    int finalDamage = static_cast<int>(damage * (1.0f - reduction));
     HP.reduceCurrent(finalDamage);
     if (isDead())
         onDeath();
 }
 
-void Entity::heal(const damage_t& heal) 
+void Entity::heal(const int& heal) 
 {
     HP.increaseCurrent(heal);
 }

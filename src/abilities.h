@@ -9,6 +9,7 @@ enum class ABILITYTYPE {
     CAST,
     CHANNEL,
     DOT,
+    HEAL
 };
 typedef ABILITYTYPE ability_t;
 
@@ -19,7 +20,7 @@ public:
     //DEFAULT CONSTRUCTOR
     Abilities()
         : name{""}, amountRange({0, 0}), cd(0), castTime(0), 
-           lastUsedTime(0), duration(0), type(ABILITYTYPE::INSTANT), isOffensive(false) {}
+           lastUsedTime(0), duration(0), type(ABILITYTYPE::INSTANT) {}
 
     //PARAMETER CONSTRUCTOR
     Abilities(const std::string& nameInit,
@@ -27,9 +28,8 @@ public:
     u_int8_t cdInit,
     u_int8_t castTimeInit,
     float durationInit = 0.0f,
-    ability_t typeInit = ability_t::INSTANT,
-    bool isOffensiveInit)
-        : name(nameInit), amountRange(amountRangeInit), cd(cdInit), castTime(castTimeInit), lastUsedTime(0), duration(durationInit), type(typeInit), isOffensive(isOffensiveInit)
+    ability_t typeInit = ability_t::INSTANT)
+        : name(nameInit), amountRange(amountRangeInit), cd(cdInit), castTime(castTimeInit), lastUsedTime(0), duration(durationInit), type(typeInit)
         {}
 
     damage_t rollDamage() const
@@ -47,7 +47,7 @@ public:
 
     bool isOffensive()
     {
-        return isOffensive;
+        return type == ABILITYTYPE::HEAL;
     }
 
     void use(float currentTime) {
@@ -67,7 +67,6 @@ private:
     ability_t type; //INSTANT, CAST, ETC...
     float duration; // for DoTs, HoTs
     float lastUsedTime; //tracks cds
-    bool isOffensive;
 
 
 };

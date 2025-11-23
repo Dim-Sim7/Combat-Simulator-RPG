@@ -4,7 +4,7 @@
 #include <iostream>     // for std::cout in levelUp()
 
 // Type alias for character stats (32-bit unsigned integer)
-using stat_t = std::uint32_t;
+
 
 /**
  * @brief Holds base combat statistics for an entity (damage, armor, level).
@@ -14,33 +14,33 @@ using stat_t = std::uint32_t;
  */
 class StatBlock {
 private:
-    std::pair<stat_t, stat_t> damage;  // Damage range (min, max)
-    stat_t armor;                      // Defensive stat
-    stat_t level;                      // Current level of the entity
+    std::pair<int, int> damage;  // Damage range (min, max)
+    int armor;                      // Defensive stat
+    int level;                      // Current level of the entity
 
 public:
     /// Default constructor initializes all values to base starting stats
     StatBlock();
 
     /// Parameterized constructor
-    StatBlock(std::pair<stat_t, stat_t> dmg, stat_t arm, stat_t lvl);
+    StatBlock(std::pair<int, int> dmg, int arm, int lvl);
 
     // ----- Getters -----
-    [[nodiscard]] std::pair<stat_t, stat_t> getDamageRange() const;
-    [[nodiscard]] stat_t getArmor() const;
-    [[nodiscard]] stat_t getLevel() const;
+    [[nodiscard]] std::pair<int, int> getDamageRange() const;
+    [[nodiscard]] int getArmor() const;
+    [[nodiscard]] int getLevel() const;
 
     // ----- Setters -----
-    void setDamage(const std::pair<stat_t, stat_t>& inDamage);
-    void setArmor(stat_t inArmor);
-    void setLevel(stat_t inLevel);
+    void setDamage(const std::pair<int, int>& inDamage);
+    void setArmor(int inArmor);
+    void setLevel(int inLevel);
 
     // ----- Increment Methods -----
-    void increaseDamage(const std::pair<stat_t, stat_t>& dmg);
-    void increaseArmor(stat_t arm);
+    void increaseDamage(const std::pair<int, int>& dmg);
+    void increaseArmor(int arm);
     void levelUp();
 
     // ----- Utility -----
     /// Returns a random damage roll between min and max
-    [[nodiscard]] stat_t rollDamage() const;
+    [[nodiscard]] int rollDamage() const;
 };

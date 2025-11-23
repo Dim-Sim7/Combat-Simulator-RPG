@@ -13,8 +13,8 @@ public:
     NPC() : Entity() {}
     
     NPC(const StatBlock& statsInit, 
-            const point_t& hpInitCurr, 
-            const point_t& hpInitMax, 
+            const int& hpInitCurr, 
+            const int& hpInitMax, 
             const std::vector<Abilities>& abilitiesInit,
             const std::string& nameInit)
             : Entity(statsInit, hpInitMax, hpInitCurr, abilitiesInit, nameInit) {}
@@ -39,7 +39,7 @@ public:
         return hasEscaped;
     }
 
-    point_t expOnDeath()
+    int expOnDeath()
     {
         return ((5 * stats.getLevel()) + 45) * 15; //added x15 exp gain multiplier (to speed things up)
     }

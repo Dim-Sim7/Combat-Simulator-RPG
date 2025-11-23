@@ -15,8 +15,7 @@ struct CastState {
     Entity* target = nullptr;
 };
     
-//Typedef for damage type
-typedef uint32_t damage_t;
+
 /**
  * @brief Entity represents either a player or NPC.
  * Provides virtual methods to be implemented by children
@@ -26,8 +25,8 @@ class Entity {
 public:
     Entity();
     explicit Entity(const StatBlock& statsInit, 
-        const point_t& hpInitCurr, 
-        const point_t& hpInitMax, 
+        const int& hpInitCurr, 
+        const int& hpInitMax, 
         const std::vector<Abilities>& abilitiesInit,
         const std::string& inName);
 
@@ -58,9 +57,9 @@ public:
     void attack(Entity& target, float currentTime) = 0;
     void castSpell(Entity* target, Abilities& spell, float currentTime) = 0;
 
-    void takeDamage(const damage_t& damage) = 0;
+    void takeDamage(const int& damage) = 0;
     float calcDamageReduction() const = 0;
-    void heal(const damage_t& heal) = 0;
+    void heal(const int& heal) = 0;
     void onDeath() = 0;
 
     double getNextAutoAttackTime() const;
@@ -74,7 +73,7 @@ public:
 
 protected:
     StatBlock stats;
-    PointWell HP; //unique ptr manages each object individually and makes sure it gets deleted in mem when out of scope
+    PointWell HP; 
     std::vector<Abilities> abilities;
     std::string name;
     CastState cast;
@@ -82,6 +81,6 @@ protected:
     
     double nextAutoAttackTime = 0.0;
     double nextGlobalCooldownEnd = 0.0;
-    double attackSpeed = 2.6; // e.g. 2.6s weapon speed
+    double attackSpeed = 2.6; // default attack speed
     double globalCooldown = 1.5; // standard GCD
 };

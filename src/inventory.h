@@ -6,57 +6,99 @@
 #include <iostream>
 #include <memory>
 
-class Inventory:
+class Inventory
 {
 
 public:
 
     Inventory(): gold(0u) {}
 
-    void addItem(Item& item)
+    void addItem(Item& itemToAdd)
     {
-        if(alreadyExists(item))
+        if (Item* existing = findItem(itemToAdd))
         {
-            item.incrementStackSize();
+            if (existing->isStackable())
+            {
+                item->incrementStackSize(); //increment item in inventory
+                return;
+            }
+            
         }
-        else
-        {
-            items.push_back(item);
-        }
+
+        items.push_back(&itemToAdd);
 
     }
 
     void removeItem(Item& item)
     {
-        if(alreadyExists(item))
+        Item* stored = findItem(item);
+
+        if (!stored)
         {
-            item.decrementStackSize();
+            std::cout << item.getName() << " doesn't exist in your inventory!\n";
+            return;
         }
-        else
-        {
-            std::cout << item.getName() << " doesn't exist in your inventory! " << "\n";
-        }
-        if(item.noMoreStackSize())
-        {
-            items.pop_back(item);
-        }
+
+        stored->decrementStackSize();
+
+        if (stored->noMoreStackSize())
+            items.erase(std::remove(items.begin(), items.end(), stored), items.end());
     }
 
-    //implement get all consumables, weapons, armor, jewelery
+    void printInventory() const
+    {
+        std::cout << "-------- INVENTORY --------\n";
+        for (const auto& item: items)
+        {
+            std::cout << item->getName() << "\n";
+        }
+        std::cout << "----------------\n";
+    }
+
+    //implement get all consumables, weapons, armor
+    std::vector<Item*> getItemsByType(ITEMTYPE type) const
+    {
+        std::vector<Item*> specificItems;
+        for (auto* item : items)
+        {
+            if (item->getType() == type)
+                result.push_back(item);
+        }
+        return specificItems;
+    }
+
+    Item* findItem(const Item& itemToCheck)
+    {
+        for (auto* item : items)
+            if (item->getID() == itemToCheck.getID())
+                return item;
+        return nullptr;
+    }
+
+    void addGold(int inGold)
+    {
+        if (inGold > 0)
+            gold += inGold;
+    }
 
 private:
-    std::vector<Item> items;
-    uint32_t gold;
+    std::vector<Item*> items;
+    int gold;
 
-    bool alreadyExists(const Item& item) 
+    bool alreadyExists(const Item& itemToCheck) 
     {
-        bool exists = false;
-        if(std::find(items.begin(), items.end(), item) != items.end())
-        {
-            exists = true;
-        }
+        bool found = false;
 
-        return exists;
+        for (auto* item: items)
+        {
+            if (item->getID() == itemToCheck.getID())
+            {
+                found = true;
+                break;
+            }
+
+        }
+        return found;
     }
 
 

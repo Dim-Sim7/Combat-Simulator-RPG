@@ -2,7 +2,6 @@
 #include <cstdint>
 
 //Type alias for pointwell type
-typedef std::uint32_t point_t;
 
 /**
  * @brief holds pointwell mechanics for an entity.
@@ -17,26 +16,26 @@ public:
     PointWell();
 
     //parameter constructor
-    explicit PointWell (point_t inMax, point_t inCurrent);
+    explicit PointWell (int inMax, int inCurrent);
     // ----- Getters -----
-    [[nodiscard]] point_t getMax() const; //const means this function won't change any member variables
-    [[nodiscard]] point_t getCurrent() const;
+    [[nodiscard]] int getMax() const; //const means this function won't change any member variables
+    [[nodiscard]] int getCurrent() const;
 
     //// ----- Setters -----
-    bool setMax(const point_t& newMax);
+    bool setMax(const int& newMax);
 
-    bool setCurrent(const point_t& newCurrent);
+    bool setCurrent(const int& newCurrent);
 
     // ----- Utility -----
 
     //reduce current point, returns 0 if reduction is more than current
-    void reduceCurrent(const point_t& amount);
+    void reduceCurrent(const int& amount);
 
     //increase current point, returns max points if increase + current is more than max
-    void increaseCurrent(const point_t& amount);
+    void increaseCurrent(const int& amount);
 
 private:
-    point_t pointMax; //maximum of th well
-    point_t pointCurrent; //current points
+    int pointMax; //maximum of th well
+    int pointCurrent; //current points
 
 };

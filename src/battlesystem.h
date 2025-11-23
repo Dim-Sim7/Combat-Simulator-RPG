@@ -308,10 +308,10 @@ private:
 
         player.attack(enemy, now);
 
-        gcdEndTime = now + 1.5; //1.5s GCD
+        gcdEndTime = now + 1.5f; //1.5s GCD
     }
 
-    void tryCastSpell(Player& player, NPC& enemy, const std::string& name, float now)
+    void tryCastSpell(Player& player, NPC& enemy, const std::string& spellName, float now)
     {
         //Check GCD
         if (now < gcdEndTime)
@@ -323,14 +323,9 @@ private:
         auto& spells = player.getAbilities();
         for (auto& sp: spells)
         {
-            if (sp.getName() == name)
+            if (sp.getName() == spellName)
             {
                 player.castSpell(&enemy, sp, now);
-
-                if (sp.getType() == ABILITYTYPE::INSTANT)
-                    gcdEndTime = now + 1.5f;
-
-
                 return;
             }
         }
@@ -340,6 +335,12 @@ private:
 
     void tryUseConsumable(Player& player, const std::string& name, float now)
     {
+            // Check GCD first
+        if (now < gcdEndTime)
+        {
+            std::cout << "[Fail] On Global Cooldown.\n";
+            return;
+        }
         auto& items = player.inventory.getConsumables();
 
         for (auto& it : items)
