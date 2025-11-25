@@ -17,7 +17,8 @@
 					[
 						0,
 						1,
-						2
+						2,
+						3
 					]
 				}
 			],
@@ -34,7 +35,8 @@
 					[
 						0,
 						1,
-						2
+						2,
+						3
 					]
 				}
 			],
@@ -42,22 +44,29 @@
 			[
 				{
 					"directoryIndex" : 0,
+					"id" : "test_armor::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_armor-Debug-34a70a82c35a30aa4eb3.json",
+					"name" : "test_armor",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
 					"id" : "test_entity::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-test_entity-Debug-9f3d75eb74db7d2e2e65.json",
+					"jsonFile" : "target-test_entity-Debug-611f2a27da8e0d7bb9a2.json",
 					"name" : "test_entity",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "test_pointwell::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-test_pointwell-Debug-4b9f33cb135453b8e44e.json",
+					"jsonFile" : "target-test_pointwell-Debug-3afa3023afa79a69403d.json",
 					"name" : "test_pointwell",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "test_stat_block::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-test_stat_block-Debug-e40da3c98094aae6def5.json",
+					"jsonFile" : "target-test_stat_block-Debug-c341c2dcb6d17c928ea4.json",
 					"name" : "test_stat_block",
 					"projectIndex" : 0
 				}

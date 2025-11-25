@@ -28,11 +28,19 @@ add_executable(test_entity
     src/statblock.cpp
 )   
 
+add_executable(test_armor
+    tests/test_armor.cpp
+    src/armor.cpp
+    src/item.cpp
+    src/pointwell.cpp
+)
+
 # Link with Catch2 (if installed system-wide)
 find_package(Catch2 3 REQUIRED)
 target_link_libraries(test_stat_block PRIVATE Catch2::Catch2WithMain)
 target_link_libraries(test_pointwell PRIVATE Catch2::Catch2WithMain)
 target_link_libraries(test_entity PRIVATE Catch2::Catch2WithMain)
+target_link_libraries(test_armor PRIVATE Catch2::Catch2WithMain)
 
 #COMMANDS I NEED TO KNOW
 #rm -rf build

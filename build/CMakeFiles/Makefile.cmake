@@ -133,4 +133,5 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/test_stat_block.dir/DependInfo.cmake"
   "CMakeFiles/test_pointwell.dir/DependInfo.cmake"
   "CMakeFiles/test_entity.dir/DependInfo.cmake"
+  "CMakeFiles/test_armor.dir/DependInfo.cmake"
   )

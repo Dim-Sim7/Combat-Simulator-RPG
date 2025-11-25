@@ -66,6 +66,7 @@ CMAKE_BINARY_DIR = /home/dim__sim/workspace/warcraft_roguelike/build
 all: CMakeFiles/test_stat_block.dir/all
 all: CMakeFiles/test_pointwell.dir/all
 all: CMakeFiles/test_entity.dir/all
+all: CMakeFiles/test_armor.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -76,6 +77,7 @@ preinstall:
 clean: CMakeFiles/test_stat_block.dir/clean
 clean: CMakeFiles/test_pointwell.dir/clean
 clean: CMakeFiles/test_entity.dir/clean
+clean: CMakeFiles/test_armor.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -85,7 +87,7 @@ clean: CMakeFiles/test_entity.dir/clean
 CMakeFiles/test_stat_block.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_stat_block.dir/build.make CMakeFiles/test_stat_block.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_stat_block.dir/build.make CMakeFiles/test_stat_block.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/dim__sim/workspace/warcraft_roguelike/build/CMakeFiles --progress-num=9,10,11 "Built target test_stat_block"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/dim__sim/workspace/warcraft_roguelike/build/CMakeFiles --progress-num=14,15,16 "Built target test_stat_block"
 .PHONY : CMakeFiles/test_stat_block.dir/all
 
 # Build rule for subdir invocation for target.
@@ -111,7 +113,7 @@ CMakeFiles/test_stat_block.dir/clean:
 CMakeFiles/test_pointwell.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_pointwell.dir/build.make CMakeFiles/test_pointwell.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_pointwell.dir/build.make CMakeFiles/test_pointwell.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/dim__sim/workspace/warcraft_roguelike/build/CMakeFiles --progress-num=6,7,8 "Built target test_pointwell"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/dim__sim/workspace/warcraft_roguelike/build/CMakeFiles --progress-num=11,12,13 "Built target test_pointwell"
 .PHONY : CMakeFiles/test_pointwell.dir/all
 
 # Build rule for subdir invocation for target.
@@ -137,7 +139,7 @@ CMakeFiles/test_pointwell.dir/clean:
 CMakeFiles/test_entity.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_entity.dir/build.make CMakeFiles/test_entity.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_entity.dir/build.make CMakeFiles/test_entity.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/dim__sim/workspace/warcraft_roguelike/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target test_entity"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/dim__sim/workspace/warcraft_roguelike/build/CMakeFiles --progress-num=6,7,8,9,10 "Built target test_entity"
 .PHONY : CMakeFiles/test_entity.dir/all
 
 # Build rule for subdir invocation for target.
@@ -155,6 +157,32 @@ test_entity: CMakeFiles/test_entity.dir/rule
 CMakeFiles/test_entity.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_entity.dir/build.make CMakeFiles/test_entity.dir/clean
 .PHONY : CMakeFiles/test_entity.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/test_armor.dir
+
+# All Build rule for target.
+CMakeFiles/test_armor.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_armor.dir/build.make CMakeFiles/test_armor.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_armor.dir/build.make CMakeFiles/test_armor.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/dim__sim/workspace/warcraft_roguelike/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target test_armor"
+.PHONY : CMakeFiles/test_armor.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/test_armor.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dim__sim/workspace/warcraft_roguelike/build/CMakeFiles 5
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/test_armor.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dim__sim/workspace/warcraft_roguelike/build/CMakeFiles 0
+.PHONY : CMakeFiles/test_armor.dir/rule
+
+# Convenience name for target.
+test_armor: CMakeFiles/test_armor.dir/rule
+.PHONY : test_armor
+
+# clean rule for target.
+CMakeFiles/test_armor.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_armor.dir/build.make CMakeFiles/test_armor.dir/clean
+.PHONY : CMakeFiles/test_armor.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

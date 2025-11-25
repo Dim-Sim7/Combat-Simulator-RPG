@@ -8,13 +8,18 @@
 #include <iostream>
 #include "npc_ai.h"
 #include "player.h"
+#include "npc.h"
+#include "item.h"
+#include "inventory.h"
+
+class Inventory;
 
 enum class PlayerCommand { Attack, Spell, Consumable, Run, None };
 struct Command {
     PlayerCommand type = PlayerCommand::None;
     std::string data; //spell name or item name
     float timestamp;
-}
+};
 class BattleSystem
 {
 public:
@@ -82,11 +87,12 @@ public:
                     handleCommand(player, enemy, cmd, now);
             }
 
+
             if (enemy.isDead())
             {
                 player.gainExp(enemy.expOnDeath());
                 enemy.onDeath();
-                player.addLoot(enemy.dropLoot());
+                //player.addLoot(enemy.dropLoot());
                 running = false;
             }
 
@@ -97,6 +103,7 @@ public:
             }
             // 16ms delay (~60 FPS loop)
             std::this_thread::sleep_for(std::chrono::milliseconds(16));
+
         }
         // Clean up
         if (inputThread.joinable())
@@ -153,13 +160,18 @@ private:
     {
         while (running)
         {
-            if (!std::cin.good()) continue;
+            if (!std::cin.good()) {
+                std::cin.clear(); // Clear error state
+                std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Prevent busy-wait
+                continue;
+            }
 
+            std::cout << "\n" << player.getEntityName() << " HP: " << player.getCurrentHP() << "/" << player.getMaxHP() << "\n";
             std::cout << "\n===== ACTIONS =====\n";
             std::cout << "[1] Melee Attack\n";
 
             const auto& spells = player.getAbilities();
-            const auto& items = player.inventory.getConsumables();
+            const auto& items = player.inventory->getItemsByType(ITEMTYPE::CONSUMABLE);
 
             int optionIndex = 2;
             // spells
@@ -172,13 +184,17 @@ private:
             // consumables
             for (auto& it : items)
             {
-                std::cout << "[" << optionIndex << "] Item: " << it.getName() << "\n";
+                std::cout << "[" << optionIndex << "] Item: " << it->getName() << "\n";
                 optionIndex++;
             }
 
             std::cout << "> ";
             int choice;
-            std::cin >> choice;
+            if (!(std::cin >> choice)) {
+                std::cout << "[Input error or EOF detected. Exiting input loop.]\n";
+                running = false;
+                break;
+            }
 
             float now = getTime();
 
@@ -208,7 +224,7 @@ private:
             if (choice >= itemStart && choice <= itemEnd)
             {
                 int index = choice - itemStart;
-                pushCommand(PlayerCommand::Consumable, now, items[index].getName());
+                pushCommand(PlayerCommand::Consumable, now, items[index]->getName());
                 continue;
             }
 
@@ -228,15 +244,17 @@ private:
         {
             case PlayerCommand::Attack:
                 tryAttack(player, enemy, now);
+                std::cout << enemy.getEntityName() << " HP: [" << enemy.getCurrentHP() << "/" << enemy.getMaxHP() << "]\n";
                 break;
             
             case PlayerCommand::Spell:
                 tryCastSpell(player, enemy, cmd.data, now);
+                std::cout << enemy.getEntityName() << " HP: [" << enemy.getCurrentHP() << "/" << enemy.getMaxHP() << "]\n";
                 break;
             
             case PlayerCommand::Consumable:
                 tryUseConsumable(player, cmd.data, now);
-                break
+                break;
 
             default:
                 break;
@@ -248,8 +266,8 @@ private:
         if (!caster->cast.isCasting || caster->cast.spell == nullptr)
             return;
 
-        Abilities* spell = caster.cast.spell;
-        Entity* target = caster.cast.target;
+        Abilities* spell = caster->cast.spell;
+        Entity* target = caster->cast.target;
 
         // finish spell cast
         spell->use(now);
@@ -257,23 +275,23 @@ private:
         //Damage spell
         if (spell->isOffensive())
         {
-            damage_t dmg = spell->rollDamage();
-            if (caster.isCrit()) dmg *= 2;
+            int dmg = spell->rollDamage();
+            if (caster->isCrit()) dmg *= 2;
 
             target->takeDamage(dmg);
 
-            std::cout << caster.getEntityName() << " casts "
+            std::cout << caster->getEntityName() << " casts "
                         << spell->getName()
                         << " for " << dmg << " damage!\n";
         }
         else if (!(spell->isOffensive()))
         {
-            damage_t heal = spell->rollDamage();
-            if (caster.isCrit()) heal *= 2;
+            int heal = spell->rollDamage();
+            if (caster->isCrit()) heal *= 2;
 
             caster->heal(heal);
 
-            std::cout << caster.getEntityName() << " casts "
+            std::cout << caster->getEntityName() << " casts "
                         << spell->getName()
                         << " that heals themselves for " << heal << "\n";            
         }
@@ -288,26 +306,26 @@ private:
         gcdEndTime = now + 1.5f;
 
         //Clear cast state
-        caster.cast.isCasting = false;
-        caster.cast.spell = nullptr;
-        caster.cast.target = nullptr;
+        caster->cast.isCasting = false;
+        caster->cast.spell = nullptr;
+        caster->cast.target = nullptr;
     }
 
     // ============================================================
     // COMBAT EXECUTION
     // ============================================================
-    float gcdEndTime; //global cooldown timer
+    float gcdEndTime; //global  timer
 
     void tryAttack(Player& player, NPC& enemy, float now)
     {
         if (now < gcdEndTime)
         {
-            std::cout << "Attack on cooldown.\n";
+            std::cout << "[Fail] Attack on Global Cooldown. " << gcdEndTime - now << "s remaining.\n";
             return;
         }
 
+        std::cout << "[Attack]\n";
         player.attack(enemy, now);
-
         gcdEndTime = now + 1.5f; //1.5s GCD
     }
 
@@ -316,7 +334,7 @@ private:
         //Check GCD
         if (now < gcdEndTime)
         {
-           std::cout << "[Fail] On Global Cooldown.\n";
+           std::cout << "[Fail] On Global Cooldown. " << gcdEndTime - now << "s remaining.\n";
             return;        
         }
 
@@ -325,6 +343,7 @@ private:
         {
             if (sp.getName() == spellName)
             {
+                std::cout << "[Cast] " << spellName << "\n";
                 player.castSpell(&enemy, sp, now);
                 return;
             }
@@ -338,23 +357,52 @@ private:
             // Check GCD first
         if (now < gcdEndTime)
         {
-            std::cout << "[Fail] On Global Cooldown.\n";
+            std::cout << "[Fail] On Global .\n";
             return;
         }
-        auto& items = player.inventory.getConsumables();
+        auto const& items = player.inventory->getItemsByType(ITEMTYPE::CONSUMABLE);
 
         for (auto& it : items)
         {
-            if (it.getName() == name)
+            if (it->getName() == name)
             {
                 std::cout << "[Use] " << name << "\n";
 
-                it.applyEffect(player);
-                player.inventory.removeItem(it);
+                applyConsumableEffect(&player, it->getStatModifier());
+                player.inventory->removeItem(it);
 
                 gcdEndTime = now + 1.5f;
                 return;
             }
+        }
+    }
+    void applyConsumableEffect(Player* player, const StatModifier& statMod)
+    {
+        // Health buff
+        if (statMod.health.has_value()) {
+            player->heal(statMod.health.value());
+            std::cout << player->getEntityName() << " heals for " << statMod.health.value() << " HP!\n";
+            std::cout << player->getEntityName() << " HP: [" << player->getCurrentHP() << "/" << player->getMaxHP() << "]\n";
+        }
+
+        // Armor buff
+        if (statMod.armor.has_value()) {
+            player->getStats().increaseArmor(statMod.armor.value());
+            std::cout << player->getEntityName() << " gains " << statMod.armor.value() << " armor!\n";
+        }
+
+        // Speed buff
+        if (statMod.speed.has_value()) {
+            // Implement speed logic if applicable
+            std::cout << player->getEntityName() << " gains " << statMod.speed.value() << " speed!\n";
+        }
+
+        // Damage buff
+        if (statMod.damage.has_value()) {
+            player->getStats().increaseDamage(statMod.damage.value());
+            std::cout << player->getEntityName() << " gains +" 
+                    << statMod.damage.value().first << "-" << statMod.damage.value().second 
+                    << " damage!\n";
         }
     }
 

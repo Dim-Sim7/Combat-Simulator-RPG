@@ -401,4 +401,5 @@ CMakeFiles/test_entity.dir/tests/test_entity.cpp.o: \
  /home/dim__sim/workspace/warcraft_roguelike/tests/../src/pointwell.h \
  /home/dim__sim/workspace/warcraft_roguelike/tests/../src/statblock.h \
  /usr/include/c++/13/iostream \
+ /home/dim__sim/workspace/warcraft_roguelike/tests/../src/statsmod.h \
  /home/dim__sim/workspace/warcraft_roguelike/tests/../src/abilities.h

@@ -1,160 +1,62 @@
 #pragma once
 
 #include "entity.h"
-#include "npc.h"
-#include "abilities_pool.h"
-#include "pointwell.h"
-#include "equipslots.h"
-#include "inventory.h"
 #include <cstdint>
 #include <random>
 #include <cmath>
+#include <vector>
+#include <memory>
+#include <cassert>
+#include <utility>
+#include <array>
+#include <optional>
+#include "equipslots.h"
+#include "abilities_pool.h"
+#include "inventory.h"
+
+class Item;
+class Inventory;
+class EquipSlots;
+class Abilities;
+class AbilitiesPool;
+class StatBlock;
 
 //player class. Handles playable character. Attacking, cast spells, leveling, death
 class Player: public Entity {
 
-public:
-    Player() : Entity(), EXP(100u, 0u) {}
+public:    
+    std::unique_ptr<Inventory> inventory;
+    std::unique_ptr<EquipSlots> equipSlots;
+    std::unique_ptr<AbilitiesPool> aPool;
+    ~Player();
+    Player();
 
     Player(const StatBlock& statsInit, 
         const int& hpInitCurr, 
         const int& hpInitMax, 
         const std::vector<Abilities>& abilitiesInit,
-        const std::string& nameInit)
-        : Entity(statsInit, hpInitMax, hpInitCurr, abilitiesInit, nameInit), //calls Entity's parameterized constructor
-        EXP(100u, 0u) {}
-
-    ~Player() {}
+        const std::string& nameInit);
     
-    void gainExp(int earnedEXP)
-    {
-        EXP.increaseCurrent(earnedEXP);
-
-        std::cout << "You gain " << earnedEXP << " experience.\n";
-        if (EXP.getCurrent() == EXP.getMax())
-        {
-            EXP.setCurrent(0);
-            EXP.setMax(getEXPToLevel());
-            levelUp();
-        }
-    }
+    void gainExp(int earnedEXP);
 
 
-    void onDeath() override
-    {
-        std::cout << getEntityName() << " has died!" << '\n';
-        ~Player();
-    }
+    void onDeath();
 
 
 private:
     PointWell EXP;
-    AbilitiesPool aPool;
-    Inventory inventory;
-    EquipSlots equipSlots;
+    
+
 
     //Handle item equip logic
-    void equipWeapon(Item& itemToEquip)
-    {
-        //is item a weapon?
-        Weapon* newWeapon = dynamic_cast<Weapon*>(&itemToEquip);
-        if (!newWeapon)
-            return;
-
-        //2H LOGIC
-        if (newWeapon->isTwoHanded())
-        {
-            //Unequip main hand if occupied
-            if (auto* current = equipSlots.getItemFromSlot(EQUIP_SLOT_TYPE::MAIN_HAND))
-                inventory.addItem(current);
-            
-            //Unequip offhand is necessary
-            if (equipSlots.isSlotEquipped(EQUIP_SLOT_TYPE::OFF_HAND))
-                inventory.addItem(equipSlots.getItemFromSlot(EQUIP_SLOT_TYPE::OFF_HAND));
-            
-            equipSlots.equipItem(itemToEquip, EQUIP_SLOT_TYPE::MAIN_HAND);
-            return;
-        }
-
-        //1H LOGIC
-        if (auto* current = equipSlots.getItemFromSlot(EQUIP_SLOT_TYPE::MAIN_HAND))
-        {
-            Weapon* currentWeapon = dynamic_cast<Weapon*>(current);
-
-            //compare damage
-            if (currentWeapon && current->getDamageBuff().first < newWeapon->getDamageBuff().first)
-            {
-                //replace main hand
-                inventory.addItem(current);
-                equipSlots.equipItem(itemToEquip, EQUIP_SLOT_TYPE::MAIN_HAND);
-            }
-            else
-            {
-                //Equip off-hand
-                if (auto* offhand = equipSlots.getItemFromSlot(EQUIP_SLOT_TYPE::OFF_HAND))
-                    inventory.addItem(offhand);
-                
-                equipSlots.equipItem(itemToEquip, EQUIP_SLOT_TYPE::OFF_HAND);
-            }
-        }
-        else
-        {
-            //No main-hand, equip directly
-            equipSlots.equipItem(itemToEquip, EQUIP_SLOT_TYPE::MAIN_HAND);
-        }
-        recalculateStats();
-    }
+    void equipWeapon(Item& itemToEquip);
 
     //IMPLEMENT
-    void recalculateStats()
-    {
-        StatModifier newStatMod = equipSlots.getTotalStatMods();
-        stats.setArmor(newStatMod.armor);
-        stats.setDamage(newStatMod.damage)
-    }
+    void recalculateStats();
 
-    void levelUp()
-    {
-        stats.levelUp();
-        
-        if (stats.getLevel() % 5 == 0) //Every 5 levels, gain an ability
-        {
-            Abilities newAbility = aPool.getRandomAbility(abilities);
-            if (newAbility.getName() != "None") 
-            {
-                abilities.push_back(newAbility);
-                std::cout << name << " learned a new ability: " << newAbility.getName() << "!\n";
-            }
-        }
+    void levelUp();
 
-        
-    }
-
-    int getEXPToLevel()
-    {
-        int curLvl = stats.getLevel();
-        int EXPtoLevel = 0;
-        if (curLvl < 11) // level 1 to 11
-        {
-            EXPtoLevel = (40 * (curLvl * curLvl)) +  (360 * curLvl);
-        }
-        else if (curLvl < 27) // level 11 to 27
-        {
-            EXPtoLevel = static_cast<int>((-0.4 * pow(curLvl, 3)) + (40.4 * pow(curLvl, 2)) + (396 * curLvl));
-        }
-        else if (curLvl <= 59) //level 27 to 59
-        {
-            EXPtoLevel = static_cast<int>(((65 * pow(curLvl, 2)) - (165 * curLvl) - 6750) * 0.82);
-        }
-        else //level 60+
-        {
-            EXPtoLevel = 155 + (235 + (5 * curLvl)) * (1344 - 69 - ((69 - curLvl) * (3 + (69 - curLvl) * 4)));
-        }
-
-        return EXPtoLevel;
-        
-        
-    }
+    int getEXPToLevel();
 
     
 

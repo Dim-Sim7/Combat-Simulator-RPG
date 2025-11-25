@@ -1,36 +1,28 @@
 #pragma once
 #include <cstdint>
+#include "item.h"
+#include "pointwell.h"
 
-enum class ARMORTYPE {CLOTH, LEATHER, MAIL, PLATE, CLOAK, SHIELD}
-enum class ARMORSLOT {CHEST, FEET, HANDS, HEAD, LEGS, SHOULDER, WAIST, WRIST, CLOAK, SHIELD}
+class PointWell;
+
+enum class ARMORTYPE {CLOTH, LEATHER, MAIL, PLATE, CLOAK, SHIELD};
+enum class ARMORSLOT {CHEST, FEET, HANDS, HEAD, LEGS, SHOULDER, WAIST, WRIST, CLOAK, SHIELD};
 
 class Armor: public Item {
 public:
-    Armor() : Item(), durability(0) {}
+    Armor();
 
-    Armor(std::string inName, int inId, ITEMTYPE inType, int inStackSize, bool inStackable, int inDurability, ARMORTYPE inArmorType, ARMORSLOT inArmorSlot) :
-        Item(inName, inId, inType, inStackSize, inStackable), durability(inDurability), armorType(inArmorType), armorSlot(inArmorSlot) {}
+    Armor(std::string inName, int inId, ITEMTYPE inType, int inStackSize, bool inStackable, int inCurrDurability, int inMaxDurability, 
+            int inArmor, ARMORTYPE inArmorType, ARMORSLOT inArmorSlot);
 
-
-    void setDurability(int inDurability)
-    {
-        assert(inDurability >= 0 && "Durability must be 0 or greater");
-
-        if (inDurability < 0)
-        {
-            inDurability = 0;
-        }
-
-        durability = inDurability;
-    }
-
-    [[no discard]] int getDurability() const
-    {
-        return durability;
-    }
+    void setCurrDurability(int inCurrDurability);
+    void setMaxDurability(int inDurability);
+    [[nodiscard]] int getCurrDurability() const;
+    [[nodiscard]] int getMaxDurability() const;
 
 private:
-    int durability;
+    int armor;
+    PointWell durability;
     ARMORTYPE armorType;
     ARMORSLOT armorSlot;
 

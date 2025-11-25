@@ -155,6 +155,43 @@ test_entity/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_entity.dir/build.make CMakeFiles/test_entity.dir/build
 .PHONY : test_entity/fast
 
+#=============================================================================
+# Target rules for targets named test_armor
+
+# Build rule for target.
+test_armor: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_armor
+.PHONY : test_armor
+
+# fast build rule for target.
+test_armor/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_armor.dir/build.make CMakeFiles/test_armor.dir/build
+.PHONY : test_armor/fast
+
+src/armor.o: src/armor.cpp.o
+.PHONY : src/armor.o
+
+# target to build an object file
+src/armor.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_armor.dir/build.make CMakeFiles/test_armor.dir/src/armor.cpp.o
+.PHONY : src/armor.cpp.o
+
+src/armor.i: src/armor.cpp.i
+.PHONY : src/armor.i
+
+# target to preprocess a source file
+src/armor.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_armor.dir/build.make CMakeFiles/test_armor.dir/src/armor.cpp.i
+.PHONY : src/armor.cpp.i
+
+src/armor.s: src/armor.cpp.s
+.PHONY : src/armor.s
+
+# target to generate assembly for a file
+src/armor.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_armor.dir/build.make CMakeFiles/test_armor.dir/src/armor.cpp.s
+.PHONY : src/armor.cpp.s
+
 src/entity.o: src/entity.cpp.o
 .PHONY : src/entity.o
 
@@ -179,6 +216,30 @@ src/entity.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_entity.dir/build.make CMakeFiles/test_entity.dir/src/entity.cpp.s
 .PHONY : src/entity.cpp.s
 
+src/item.o: src/item.cpp.o
+.PHONY : src/item.o
+
+# target to build an object file
+src/item.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_armor.dir/build.make CMakeFiles/test_armor.dir/src/item.cpp.o
+.PHONY : src/item.cpp.o
+
+src/item.i: src/item.cpp.i
+.PHONY : src/item.i
+
+# target to preprocess a source file
+src/item.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_armor.dir/build.make CMakeFiles/test_armor.dir/src/item.cpp.i
+.PHONY : src/item.cpp.i
+
+src/item.s: src/item.cpp.s
+.PHONY : src/item.s
+
+# target to generate assembly for a file
+src/item.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_armor.dir/build.make CMakeFiles/test_armor.dir/src/item.cpp.s
+.PHONY : src/item.cpp.s
+
 src/pointwell.o: src/pointwell.cpp.o
 .PHONY : src/pointwell.o
 
@@ -186,6 +247,7 @@ src/pointwell.o: src/pointwell.cpp.o
 src/pointwell.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_pointwell.dir/build.make CMakeFiles/test_pointwell.dir/src/pointwell.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_entity.dir/build.make CMakeFiles/test_entity.dir/src/pointwell.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_armor.dir/build.make CMakeFiles/test_armor.dir/src/pointwell.cpp.o
 .PHONY : src/pointwell.cpp.o
 
 src/pointwell.i: src/pointwell.cpp.i
@@ -195,6 +257,7 @@ src/pointwell.i: src/pointwell.cpp.i
 src/pointwell.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_pointwell.dir/build.make CMakeFiles/test_pointwell.dir/src/pointwell.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_entity.dir/build.make CMakeFiles/test_entity.dir/src/pointwell.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_armor.dir/build.make CMakeFiles/test_armor.dir/src/pointwell.cpp.i
 .PHONY : src/pointwell.cpp.i
 
 src/pointwell.s: src/pointwell.cpp.s
@@ -204,6 +267,7 @@ src/pointwell.s: src/pointwell.cpp.s
 src/pointwell.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_pointwell.dir/build.make CMakeFiles/test_pointwell.dir/src/pointwell.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_entity.dir/build.make CMakeFiles/test_entity.dir/src/pointwell.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_armor.dir/build.make CMakeFiles/test_armor.dir/src/pointwell.cpp.s
 .PHONY : src/pointwell.cpp.s
 
 src/statblock.o: src/statblock.cpp.o
@@ -232,6 +296,30 @@ src/statblock.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_stat_block.dir/build.make CMakeFiles/test_stat_block.dir/src/statblock.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_entity.dir/build.make CMakeFiles/test_entity.dir/src/statblock.cpp.s
 .PHONY : src/statblock.cpp.s
+
+tests/test_armor.o: tests/test_armor.cpp.o
+.PHONY : tests/test_armor.o
+
+# target to build an object file
+tests/test_armor.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_armor.dir/build.make CMakeFiles/test_armor.dir/tests/test_armor.cpp.o
+.PHONY : tests/test_armor.cpp.o
+
+tests/test_armor.i: tests/test_armor.cpp.i
+.PHONY : tests/test_armor.i
+
+# target to preprocess a source file
+tests/test_armor.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_armor.dir/build.make CMakeFiles/test_armor.dir/tests/test_armor.cpp.i
+.PHONY : tests/test_armor.cpp.i
+
+tests/test_armor.s: tests/test_armor.cpp.s
+.PHONY : tests/test_armor.s
+
+# target to generate assembly for a file
+tests/test_armor.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_armor.dir/build.make CMakeFiles/test_armor.dir/tests/test_armor.cpp.s
+.PHONY : tests/test_armor.cpp.s
 
 tests/test_entity.o: tests/test_entity.cpp.o
 .PHONY : tests/test_entity.o
@@ -313,18 +401,28 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... test_armor"
 	@echo "... test_entity"
 	@echo "... test_pointwell"
 	@echo "... test_stat_block"
+	@echo "... src/armor.o"
+	@echo "... src/armor.i"
+	@echo "... src/armor.s"
 	@echo "... src/entity.o"
 	@echo "... src/entity.i"
 	@echo "... src/entity.s"
+	@echo "... src/item.o"
+	@echo "... src/item.i"
+	@echo "... src/item.s"
 	@echo "... src/pointwell.o"
 	@echo "... src/pointwell.i"
 	@echo "... src/pointwell.s"
 	@echo "... src/statblock.o"
 	@echo "... src/statblock.i"
 	@echo "... src/statblock.s"
+	@echo "... tests/test_armor.o"
+	@echo "... tests/test_armor.i"
+	@echo "... tests/test_armor.s"
 	@echo "... tests/test_entity.o"
 	@echo "... tests/test_entity.i"
 	@echo "... tests/test_entity.s"

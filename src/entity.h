@@ -2,11 +2,13 @@
 #include "pointwell.h"
 #include "statblock.h"
 #include "abilities.h"
+#include <string>
 #include <iostream>
 #include <memory>
 #include <vector>
 #include <random>
 
+class Entity; //forward declaration
 struct CastState {
     bool isCasting = false;
     float castStart = 0.0f;
@@ -30,7 +32,8 @@ public:
         const std::vector<Abilities>& abilitiesInit,
         const std::string& inName);
 
-    //-------- GETTERS ---------
+    CastState cast;
+
     StatBlock& getStats();
     PointWell& getHP();
     std::vector<Abilities>& getAbilities();
@@ -39,28 +42,28 @@ public:
     const PointWell& getHP() const; //const before states that I will not modify the thing being called. Const after is added to differentiate to the compiler the other non-const getters
     const std::vector<Abilities>& getAbilities() const;
 
-    std::string getEntityName() override { return name; }
+    int getMaxHP() const;
+    int getCurrentHP() const;
 
-    //-------- SETTERS ---------
     void setStats(StatBlock inStats);
     void setHP(PointWell inHP);
     void setAbilities(std::vector<Abilities> inAbilities);
-    //-------- UTILITY ---------
+
     bool isDead();
-    bool isCrit();
+    bool isCrit() const;
+    void onDeath();
 
     void addAbility(const Abilities& ability);
 
-    std::string getEntityName() 
+    std::string getEntityName() const;
     void setEntityName(const std::string& inName);
     
-    void attack(Entity& target, float currentTime) = 0;
-    void castSpell(Entity* target, Abilities& spell, float currentTime) = 0;
+    void attack(Entity& target, float currentTime);
+    void castSpell(Entity* target, Abilities& spell, float currentTime);
 
-    void takeDamage(const int& damage) = 0;
-    float calcDamageReduction() const = 0;
-    void heal(const int& heal) = 0;
-    void onDeath() = 0;
+    void takeDamage(const int& damage);
+    float calcDamageReduction() const;
+    void heal(const int& heal);
 
     double getNextAutoAttackTime() const;
     void setNextAutoAttackTime(double t);
@@ -76,7 +79,7 @@ protected:
     PointWell HP; 
     std::vector<Abilities> abilities;
     std::string name;
-    CastState cast;
+    
 
     
     double nextAutoAttackTime = 0.0;

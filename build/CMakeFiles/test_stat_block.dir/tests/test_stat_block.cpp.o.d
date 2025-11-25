@@ -398,4 +398,5 @@ CMakeFiles/test_stat_block.dir/tests/test_stat_block.cpp.o: \
  /usr/include/catch2/reporters/catch_reporter_teamcity.hpp \
  /usr/include/catch2/reporters/catch_reporter_xml.hpp \
  /home/dim__sim/workspace/warcraft_roguelike/tests/../src/statblock.h \
- /usr/include/c++/13/iostream
+ /usr/include/c++/13/iostream \
+ /home/dim__sim/workspace/warcraft_roguelike/tests/../src/statsmod.h

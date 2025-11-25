@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/test_armor.dir/tests/test_armor.cpp.o CMakeFiles/test_armor.dir/src/armor.cpp.o CMakeFiles/test_armor.dir/src/item.cpp.o CMakeFiles/test_armor.dir/src/pointwell.cpp.o -o test_armor  /usr/lib/libCatch2Main.a /usr/lib/libCatch2.a 

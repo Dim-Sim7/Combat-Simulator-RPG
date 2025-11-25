@@ -1,9 +1,9 @@
 #pragma once
 
 #include "entity.h"
-#include "npc.h"
 #include <cstdint>
 #include <random>
+#include <iostream>
 
 //enemy. Has a loot table (inventory), health, damage, spells. Basically same as player without leveling system
 //on death, an enemy can drop items. Enemies are created from scraped data on classicdb.
@@ -19,15 +19,35 @@ public:
             const std::string& nameInit)
             : Entity(statsInit, hpInitMax, hpInitCurr, abilitiesInit, nameInit) {}
     
-    ~NPC() {}
 
    
-    void onDeath() override
+    bool hasPotion() const
     {
-        std::cout << getEntityName() << " has died!" << '\n';
-        ~NPC(); 
+        // for (const auto& item : loot.getItems())
+        // {
+        //     if (item->getType() == ITEMTYPE::CONSUMABLE)
+        //     {
+        //         return true;
+        //     }
+        // }
+        // return false;
+        return false;
     }
-    
+
+    void usePotion()
+    {
+        // for (auto& item : loot.getItems())
+        // {
+        //     if (item->getType() == ITEMTYPE::CONSUMABLE)
+        //     {
+        //         std::cout << name << " uses a " << item->getName() << "!\n";
+        //         //apply potion effects here
+        //         loot.removeItem(item);
+        //         return;
+        //     }
+        // }
+    }
+
     void escapeCombat()
     {
         hasEscaped = true;
@@ -46,7 +66,7 @@ public:
 
 
 private:
-    LootTable loot;
+    //LootTable loot;
     bool hasEscaped = false;
 
 };

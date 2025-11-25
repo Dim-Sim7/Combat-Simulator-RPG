@@ -46,5 +46,29 @@
   "command": "/usr/bin/c++  -I/home/dim__sim/workspace/warcraft_roguelike/src -g -std=gnu++17 -o CMakeFiles/test_entity.dir/src/statblock.cpp.o -c /home/dim__sim/workspace/warcraft_roguelike/src/statblock.cpp",
   "file": "/home/dim__sim/workspace/warcraft_roguelike/src/statblock.cpp",
   "output": "CMakeFiles/test_entity.dir/src/statblock.cpp.o"
+},
+{
+  "directory": "/home/dim__sim/workspace/warcraft_roguelike/build",
+  "command": "/usr/bin/c++  -I/home/dim__sim/workspace/warcraft_roguelike/src -g -std=gnu++17 -o CMakeFiles/test_armor.dir/tests/test_armor.cpp.o -c /home/dim__sim/workspace/warcraft_roguelike/tests/test_armor.cpp",
+  "file": "/home/dim__sim/workspace/warcraft_roguelike/tests/test_armor.cpp",
+  "output": "CMakeFiles/test_armor.dir/tests/test_armor.cpp.o"
+},
+{
+  "directory": "/home/dim__sim/workspace/warcraft_roguelike/build",
+  "command": "/usr/bin/c++  -I/home/dim__sim/workspace/warcraft_roguelike/src -g -std=gnu++17 -o CMakeFiles/test_armor.dir/src/armor.cpp.o -c /home/dim__sim/workspace/warcraft_roguelike/src/armor.cpp",
+  "file": "/home/dim__sim/workspace/warcraft_roguelike/src/armor.cpp",
+  "output": "CMakeFiles/test_armor.dir/src/armor.cpp.o"
+},
+{
+  "directory": "/home/dim__sim/workspace/warcraft_roguelike/build",
+  "command": "/usr/bin/c++  -I/home/dim__sim/workspace/warcraft_roguelike/src -g -std=gnu++17 -o CMakeFiles/test_armor.dir/src/item.cpp.o -c /home/dim__sim/workspace/warcraft_roguelike/src/item.cpp",
+  "file": "/home/dim__sim/workspace/warcraft_roguelike/src/item.cpp",
+  "output": "CMakeFiles/test_armor.dir/src/item.cpp.o"
+},
+{
+  "directory": "/home/dim__sim/workspace/warcraft_roguelike/build",
+  "command": "/usr/bin/c++  -I/home/dim__sim/workspace/warcraft_roguelike/src -g -std=gnu++17 -o CMakeFiles/test_armor.dir/src/pointwell.cpp.o -c /home/dim__sim/workspace/warcraft_roguelike/src/pointwell.cpp",
+  "file": "/home/dim__sim/workspace/warcraft_roguelike/src/pointwell.cpp",
+  "output": "CMakeFiles/test_armor.dir/src/pointwell.cpp.o"
 }
 ]

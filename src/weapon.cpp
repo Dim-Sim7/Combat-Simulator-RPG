@@ -4,14 +4,13 @@
 
 Weapon::Weapon(): Item() {}
 
-Weapon::Weapon(std::string inName, int inId, ITEMTYPE inType, int inStackSize, bool inStackable, WEAPONTYPE inWeaponType, std::pair<int, int> inDmg, float inSpeed):
+Weapon::Weapon(std::string inName, int inId, ITEMTYPE inType, int inStackSize, bool inStackable, WEAPONTYPE inWeaponType):
     Item(inName, inId, inType, inStackSize, inStackable), weaponType(inWeaponType) //ITEM PARAMETER CONSTRUCTOR
     {
-        statMod.damage = inDmg;
-        statMod.speed = inSpeed;
+
     }
 
-[[nodiscard]] inline bool Weapon::isTwoHanded()
+[[nodiscard]] bool Weapon::isTwoHanded()
 {
     switch (weaponType) {
         case WEAPONTYPE::TWO_HAND_AXE:
@@ -28,7 +27,7 @@ Weapon::Weapon(std::string inName, int inId, ITEMTYPE inType, int inStackSize, b
     }
 }
 
-WEAPONTYPE const Weapon::getWeaponType()
+WEAPONTYPE Weapon::getWeaponType() const
 {
     return weaponType;
 }

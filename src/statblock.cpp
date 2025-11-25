@@ -1,30 +1,47 @@
 #include "statblock.h"
 #include <random>
 #include <algorithm> // for std::swap
+#include <utility> // for std::pair
+#include <iostream> // for std::cout
 
 // ----- Constructors -----
-StatBlock::StatBlock() 
-    : damage({0, 0}), armor{1u}, level{1u} {}
+StatBlock::StatBlock()
+    : damage({1,4})
+    , armor(1)
+    , level(1)
+    , bonusDamage({0,0})
+    , bonusArmor(0)
+{}
 
 StatBlock::StatBlock(std::pair<int, int> dmg, int arm, int lvl)
-    : damage(dmg), armor(arm), level(lvl) {}
+    : damage(dmg), armor(arm), level(lvl), bonusDamage({0,0}), bonusArmor(0) {}
 
 
 // ----- Getters -----
-std::pair<int, int> StatBlock::getDamageRange() const { return damage; }
-int StatBlock::getArmor() const { return armor; }
-int StatBlock::getLevel() const { return level; }
+[[nodiscard]] std::pair<int,int> StatBlock::getDamageRange() const
+{
+    return {
+        damage.first  + bonusDamage.first,
+        damage.second + bonusDamage.second
+    };
+}
+
+[[nodiscard]] int StatBlock::getArmor() const
+{
+    return armor + bonusArmor;
+}
+
+[[nodiscard]] int StatBlock::getLevel() const { return level; }
 
 
 // ----- Setters -----
-void StatBlock::setDamage(const std::pair<int, int>& inDamage) {
-    damage = inDamage;
-    if (damage.first > damage.second)
-        std::swap(damage.first, damage.second);
+void StatBlock::setBaseDamage(const std::pair<int, int>& inDamage) {
+    damage.first  = std::max(0, inDamage.first);
+    damage.second = std::max(inDamage.first, inDamage.second);
 }
 
-void StatBlock::setArmor(int inArmor) {
-    armor = inArmor;
+void StatBlock::setBaseArmor(int inArmor) {
+    armor = std::max(0, inArmor);
 }
 
 void StatBlock::setLevel(int inLevel) {
@@ -53,8 +70,20 @@ void StatBlock::levelUp() {
 
 // ----- Utility -----
 int StatBlock::rollDamage() const {
+    std::pair<int,int> finalDamage = this->getDamageRange();
+    int minDmg = finalDamage.first;
+    int maxDmg = finalDamage.second;
+    if (minDmg > maxDmg)
+        std::swap(minDmg, maxDmg);
+
     static std::random_device rd;
     static std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dist(damage.first, damage.second);
+    std::uniform_int_distribution<int> dist(minDmg, maxDmg);
     return dist(gen);
+}
+
+void StatBlock::applyStatModifier(const StatModifier& mod)
+{
+    bonusArmor  = mod.armor.value_or(0);
+    bonusDamage = mod.damage.value_or(std::make_pair(0,0));
 }

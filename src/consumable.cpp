@@ -19,8 +19,7 @@ void Consumable::setDuration(float inDuration)
     duration = inDuration;
 }
 
-
-[[nodiscard]] float getDuration() const
+[[nodiscard]] float Consumable::getDuration() const
 {
     return duration;
 }

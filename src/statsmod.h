@@ -1,7 +1,6 @@
 #pragma once
 
 #include <utility>
-#include "statblock.h"
 #include <optional>
 
 struct StatModifier {
@@ -25,7 +24,7 @@ struct StatModifier {
 
     //helper function to add optionals
     template<typename T>
-    std::optional<T> addOpt(const std::optional<T>& a, const std::optional<T>& b)
+    static std::optional<T> addOpt(const std::optional<T>& a, const std::optional<T>& b)
     {
         if (a && b) return *a + *b;
         if (a) return a;
@@ -34,7 +33,7 @@ struct StatModifier {
     }
 
     //helper function to add optional pairs
-    std::optional<std::pair<int,int>> addOptPair(
+    static std::optional<std::pair<int,int>> addOptPair(
         const std::optional<std::pair<int,int>>& a,
         const std::optional<std::pair<int,int>>& b)
     {
@@ -43,5 +42,7 @@ struct StatModifier {
 
         if (a) return a;
         if (b) return b;
+
+        return std::nullopt;
     }
 };

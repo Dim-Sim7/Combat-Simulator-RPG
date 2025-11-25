@@ -1,5 +1,6 @@
 
 #include "pointwell.h"
+#include <algorithm>
 
 //default constructor
 PointWell::PointWell() 
@@ -17,8 +18,8 @@ PointWell::PointWell (int inMax, int inCurrent)
 }
 
 // ----- Getters -----
-int PointWell::getMax() const { return pointMax; } //const means this function won't change any member variables
-int PointWell::getCurrent() const { return pointCurrent; }
+[[nodiscard]] int PointWell::getMax() const { return pointMax; } //const means this function won't change any member variables
+[[nodiscard]] int PointWell::getCurrent() const { return pointCurrent; }
 
 //// ----- Setters -----
 bool PointWell::setMax(const int& newMax)
@@ -48,7 +49,7 @@ bool PointWell::setCurrent(const int& newCurrent)
 //reduce current point, returns 0 if reduction is more than current
 void PointWell::reduceCurrent(const int& amount)
 {
-    pointCurrent = (amount > pointCurrent) ? 0 : pointCurrent -= amount;
+    pointCurrent = std::max(0, pointCurrent - amount);
 }
 
 //increase current point, returns max points if increase + current is more than max

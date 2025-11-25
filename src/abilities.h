@@ -3,69 +3,51 @@
 #include <utility>
 #include <random>
 
-typedef std::uint32_t damage_t;
 enum class ABILITYTYPE {
     INSTANT,
     CAST,
     CHANNEL,
     DOT,
-    HEAL
+    HEAL,
+    BUFF
 };
 typedef ABILITYTYPE ability_t;
 
 class Abilities {
 public:
 
+    Abilities();
 
-    //DEFAULT CONSTRUCTOR
-    Abilities()
-        : name{""}, amountRange({0, 0}), cd(0), castTime(0), 
-           lastUsedTime(0), duration(0), type(ABILITYTYPE::INSTANT) {}
-
-    //PARAMETER CONSTRUCTOR
     Abilities(const std::string& nameInit,
-    const std::pair<damage_t, damage_t>& amountRangeInit,
-    u_int8_t cdInit,
-    u_int8_t castTimeInit,
-    float durationInit = 0.0f,
-    ability_t typeInit = ability_t::INSTANT)
-        : name(nameInit), amountRange(amountRangeInit), cd(cdInit), castTime(castTimeInit), lastUsedTime(0), duration(durationInit), type(typeInit)
-        {}
+    const std::pair<int, int>& amountRangeInit,
+    int cdInit,
+    int castTimeInit,
+    float durationInit = 0.0f, // Default value here
+    ability_t typeInit = ability_t::INSTANT);
 
-    damage_t rollDamage() const
-    {
-        static thread_local std::mt19937 gen(std::random_device{}());
-        std::uniform_int_distribution<damage_t> dist(amountRange.first, amountRange.second);
-        return dist(gen);
-    }
+    int rollDamage() const;
 
-    const std::pair<damage_t, damage_t>& getAmountRange() const { return amountRange; }
+    const std::pair<int, int>& getAmountRange() const;
 
-    bool isOffCD(float currentTime) const {
-        return (currentTime - lastUsedTime) >= cd;
-    }
-
-    bool isOffensive()
-    {
-        return type == ABILITYTYPE::HEAL;
-    }
-
-    void use(float currentTime) {
-        lastUsedTime = currentTime;
-    }
+    bool isOffCD(float currentTime) const;
+    bool isOffensive();
+    void use(float currentTime);
     
-    const std::string& getName() const { return name; }
-    ability_t getType() const { return type; }
-    float getCastTime() const { return castTime; }
-    float getDuration() const { return duration; }
+    const std::string& getName() const;
+    ability_t getType() const;
+    float getCastTime() const;
+    float getDuration() const;
+
+    float getLastUsed() const;
+    float getCooldown() const;
 
 private:
     std::string name;
-    std::pair<damage_t, damage_t> amountRange;
-    u_int8_t cd;
-    u_int8_t castTime;
-    ability_t type; //INSTANT, CAST, ETC...
+    std::pair<int, int> amountRange;
+    float cd;
+    float castTime;
     float duration; // for DoTs, HoTs
+    ability_t type; //INSTANT, CAST, ETC...
     float lastUsedTime; //tracks cds
 
 

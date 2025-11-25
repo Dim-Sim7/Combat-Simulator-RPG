@@ -13,7 +13,7 @@ Entity::Entity(const StatBlock& statsInit,
     : stats(statsInit), HP(hpInitMax, hpInitCurr), abilities(abilitiesInit), name(inName)
 {}
 
-std::string Entity::getEntityName() { return name; }
+std::string Entity::getEntityName() const { return name; }
 void Entity::setEntityName(const std::string& inName) 
 {
     name = inName;
@@ -27,9 +27,9 @@ const StatBlock& Entity::getStats() const { return stats; }
 const PointWell& Entity::getHP() const { return HP; }
 const std::vector<Abilities>& Entity::getAbilities() const { return abilities; }
 
-void Entity::setStats(StatBlock inStats) { stats = std::move(inStats); } //move into the memory address of the new stats value
-void Entity::setHP(PointWell inHP) { HP = std::move(inHP); }
-void Entity::setAbilities(std::vector<Abilities> inAbilities) { abilities = std::move(inAbilities); }
+void Entity::setStats(StatBlock inStats) { stats = inStats; } //move into the memory address of the new stats value
+void Entity::setHP(PointWell inHP) { HP = inHP; }
+void Entity::setAbilities(std::vector<Abilities> inAbilities) { abilities = inAbilities; }
 
 void Entity::addAbility(const Abilities& ability) { abilities.push_back(ability); }
 
@@ -42,27 +42,24 @@ void Entity::setNextGlobalCooldownEnd(double t) { nextGlobalCooldownEnd = t; }
 double Entity::getAttackSpeed() const { return attackSpeed; }
 double Entity::getGlobalCooldown() const { return globalCooldown; }
 
+int Entity::getMaxHP() const { return HP.getMax(); }
+int Entity::getCurrentHP() const { return HP.getCurrent(); }
+
 bool Entity::isDead()
 {
-    if (HP.getCurrent() == 0)
+    if (HP.getCurrent() <= 0)
     {
         return true;
     }
     return false;
 }
 
-bool Entity::isCrit()
+bool Entity::isCrit() const
 {
-    
-    std::random_device rd;
-    std::mt19937 gen(rd());
-
+    static thread_local std::mt19937 gen(std::random_device{}());
     std::uniform_int_distribution<> distrib(1, 100);
-
     int randomNumber = distrib(gen);
-
     return randomNumber <= 5;
-        
 }
 
 void Entity::attack(Entity& target, float currentTime) //attack with base damage, will always have a target
@@ -89,7 +86,7 @@ void Entity::castSpell(Entity* target, Abilities& spell, float currentTime) //at
 {
     if (!spell.isOffCD(currentTime)) 
     {
-        std::cout << spell.getName() << " is on cooldown!\n";
+        std::cout << spell.getName() << " is on cooldown! "<< spell.getCooldown() - (currentTime - spell.getLastUsed()) << "s remaining.\n";
         return;
     }
 
@@ -103,9 +100,14 @@ void Entity::castSpell(Entity* target, Abilities& spell, float currentTime) //at
     if (spell.getType() == ABILITYTYPE::INSTANT)
     {
         spell.use(currentTime);
-        int damage = spell.getDamage();
+        int damage = spell.rollDamage();
         if (isCrit())
             damage *=2;
+        if (target == nullptr)
+        {
+            std::cout << "You cast " << spell.getName() << "!\n";
+            return;
+        }
         target->takeDamage(damage);
         
         std::cout << name << " cast " << spell.getName()
@@ -132,11 +134,9 @@ void Entity::takeDamage(const int& damage)
     float reduction = calcDamageReduction();
     int finalDamage = static_cast<int>(damage * (1.0f - reduction));
     HP.reduceCurrent(finalDamage);
-    if (isDead())
-        onDeath();
 }
 
-void Entity::heal(const int& heal) 
+void Entity::heal(const int& heal)
 {
     HP.increaseCurrent(heal);
 }
@@ -146,6 +146,11 @@ float Entity::calcDamageReduction() const
     float armor = static_cast<float>(stats.getArmor());
     float reduction = armor / (armor + 400.0f + (85.0f * stats.getLevel()));
     return reduction;
+}
+
+void Entity::onDeath()
+{
+    std::cout << getEntityName() << " has died!" << '\n';
 }
 
 
