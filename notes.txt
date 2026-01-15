@@ -3,6 +3,62 @@ LOOT TABLE:
     given the level on a monster, "drop" appropriate loot
     loot data is saved on a csv. 
 
+RDS = random distribution system
+
+WoW mob drop:
+gold (based on formula)
+crafting item (x-n)
+gear item (random gear)
+
+WoW boss drop:
+
+252 Gold
+Epic armor piece 1 (guaranteed)
+Epic armor piece 2 (guaranteed)
+Rare crafting recipe (random)
+0 to 3 random magic (green) items
+
+We need to be able to guarantee a specific minimum amount of items to drop
+We need to be able to have a random number of counts
+
+
+Loot table implementation
+
+Generate a loot upon specific action such as enemy death, loot chest
+
+Enemy:
+
+can always drop gold
+will drop weapons, gear with stats scaled to enemy level (need formula)
+need a way to randomise loot drop. Weighted values for items
+gear can have randomised stats values and amount of stats
+will have prefix and suffix names based on rolled stats
+gear can have multiple tiers of rarity
+
+Value drops (gold, currency, quest items)
+Item drops (weapons, armour, consumables)
+
+Always drop
+Unique drop
+
+drop objects have weight based on certain values (stat amounts)
+
+need to interface with player inventory to add loot to their bags
+
+need to access enemy level, type to generate loot
+
+
+
+
+
+
+
+
+
+
+
+
+
 EQUIPSLOTS:
     a player can open their inventory and equip loot or use consumables
     a player can look at their equippable slots (Head, cloak etc...)

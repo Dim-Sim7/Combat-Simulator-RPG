@@ -1,1 +1,0 @@
-/usr/bin/c++ -g CMakeFiles/test_pointwell.dir/tests/test_pointwell.cpp.o CMakeFiles/test_pointwell.dir/src/pointwell.cpp.o -o test_pointwell  /usr/lib/libCatch2Main.a /usr/lib/libCatch2.a 

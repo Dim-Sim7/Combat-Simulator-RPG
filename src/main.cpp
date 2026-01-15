@@ -8,39 +8,46 @@
 #include "item.h"
 #include <cstdint>
 #include <memory>
+#include "RandomDistributionSystem/RDSTable.h"
+#include "RandomDistributionSystem/RDSTable.h"
 
-int main() {
-    // Create player
-    Player player;
-    player.setEntityName("Hero");
-    player.getStats().setBaseDamage({2, 5});
-    player.getStats().setBaseArmor(2);
-    player.setHP(PointWell(100, 100));
+int main()
+{
+    // RDSTable must be owned by shared_ptr (shared_from_this is used)
+    auto table = std::make_shared<RDSTable>();
 
-    // Add a spell
-    Abilities fireball("Fireball", {5, 10}, 5, 0, 0.0f, ability_t::INSTANT);
-    player.getAbilities().push_back(fireball);
+    // Add 6 items with equal probability
+    table->AddEntry(std::make_shared<LootItem>("Item 1", 1), 10, false, false, true);
+    table->AddEntry(std::make_shared<LootItem>("Item 2", 2), 10, false, false, true);
+    table->AddEntry(std::make_shared<LootItem>("Item 3", 3), 10, false, false, true);
+    table->AddEntry(std::make_shared<LootItem>("Item 4", 4), 10, false, false, true);
+    table->AddEntry(std::make_shared<LootItem>("Item 5", 5), 10, false, false, true);
 
-    // Add a consumable
-    Item* potion = new Item("Potion", 1, ITEMTYPE::CONSUMABLE, 1, false);
-    potion->setHealthBuff(10);
-    player.inventory->addItem(potion);
+    // Keep reference to item 6
+    auto item6 = std::make_shared<LootItem>("Item 6", 6);
+    table->AddEntry(item6, 10, false, false, true);
 
-    // Create enemy
-    NPC enemy;
-    enemy.setEntityName("Goblin");
-    enemy.getStats().setBaseDamage({1, 3});
-    enemy.getStats().setBaseArmor(1);
-    enemy.setHP(PointWell(50, 50));
+    // Want 2 drops
+    table->setRDSCount(2);
 
-    // Add a spell to enemy
-    Abilities poison("Poison", {2, 4}, 5, 0, 0.0f, ability_t::INSTANT);
-    enemy.getAbilities().push_back(poison);
+    std::cout << "Step 1: Just loot 2 out of 6 - 3 runs\n";
+    for (int i = 0; i < 3; ++i) {
+        std::cout << "Run " << (i + 1) << "\n";
+        auto result = table->rdsResult();
+        for (const auto& item : result) {
+            std::cout << "    " << item->toString(0) << "\n";
+        }
+    }
 
-    // Start battle
-    BattleSystem battle;
-    battle.battleLoop(player, enemy);
+    // Set Item 6 to always drop
+    item6->setAlways(true);
 
-    std::cout << "Battle ended.\n";
-    return 0;
+    std::cout << "\nStep 2: Item 6 is now Always=true - 3 runs\n";
+    for (int i = 0; i < 3; ++i) {
+        std::cout << "Run " << (i + 1) << "\n";
+        auto result = table->rdsResult();
+        for (const auto& item : result) {
+            std::cout << "    " << item->toString(0) << "\n";
+        }
+    }
 }

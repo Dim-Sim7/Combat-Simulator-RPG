@@ -1,0 +1,5 @@
+item_id,name,item_type,stackable
+1001,Iron Sword,Weapon,false
+2001,Leather Vest,Armor,false
+3001,Health Potion,Consumable,true
+

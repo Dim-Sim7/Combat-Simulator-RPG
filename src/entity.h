@@ -11,8 +11,8 @@
 class Entity; //forward declaration
 struct CastState {
     bool isCasting = false;
-    float castStart = 0.0f;
-    float castEnd = 0.0f;
+    float castStart{0.0f};
+    float castEnd{0.0f};
     Abilities* spell = nullptr;
     Entity* target = nullptr;
 };
@@ -82,8 +82,8 @@ protected:
     
 
     
-    double nextAutoAttackTime = 0.0;
-    double nextGlobalCooldownEnd = 0.0;
-    double attackSpeed = 2.6; // default attack speed
-    double globalCooldown = 1.5; // standard GCD
+    double nextAutoAttackTime{0.0};
+    double nextGlobalCooldownEnd{0.0};
+    double attackSpeed{2.6}; // default attack speed
+    double globalCooldown{1.5}; // standard GCD
 };

@@ -37,7 +37,7 @@ private:
     void loadAllAbilities() {
         allAbilities = {
             //name, dmgrng, cd, casttime, 
-            Abilities("Fireball", std::make_pair(100u, 150u), 3, 2, 50, ability_t::CAST),
+            Abilities("Fireball", {100u, 150u}, 3, 2, 50, ability_t::CAST),
             Abilities("Frostbolt", {80, 120}, 2, 2, 40, ability_t::CAST),
             Abilities("Arcane Missiles", {50, 60}, 5, 5, 60, ability_t::CHANNEL),
             Abilities("Ice Lance", {40, 70}, 1, 0, 20, ability_t::INSTANT),

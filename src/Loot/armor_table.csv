@@ -1,0 +1,2 @@
+int inId, int inCurrDurability, int inMaxDurability, int inArmor, ARMORTYPE inArmorType, ARMORSLOT inArmorSlot
+2001,100,100,30,Leather,Chest

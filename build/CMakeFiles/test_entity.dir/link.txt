@@ -1,1 +1,0 @@
-/usr/bin/c++ -g CMakeFiles/test_entity.dir/tests/test_entity.cpp.o CMakeFiles/test_entity.dir/src/entity.cpp.o CMakeFiles/test_entity.dir/src/pointwell.cpp.o CMakeFiles/test_entity.dir/src/statblock.cpp.o -o test_entity  /usr/lib/libCatch2Main.a /usr/lib/libCatch2.a 

@@ -1,1 +1,0 @@
-/usr/bin/c++ -g CMakeFiles/test_stat_block.dir/tests/test_stat_block.cpp.o CMakeFiles/test_stat_block.dir/src/statblock.cpp.o -o test_stat_block  /usr/lib/libCatch2Main.a /usr/lib/libCatch2.a 

@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 include_directories(src)
 
 # Add your main source files (if you have an executable)
-# add_executable(warcraft_roguelike src/main.cpp src/statblock.cpp)
+add_executable(warcraft_roguelike src/main.cpp src/statblock.cpp)
 
 # --- Tests ---
 # Define the test executable
