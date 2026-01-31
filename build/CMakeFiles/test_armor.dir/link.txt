@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/test_armor.dir/tests/test_armor.cpp.o -o test_armor  libcombat_core.a _deps/catch2-build/src/libCatch2Main.a _deps/catch2-build/src/libCatch2.a 
