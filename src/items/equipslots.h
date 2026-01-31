@@ -2,8 +2,8 @@
 #include <array>
 #include <cstddef>
 #include <stdexcept>
-#include "statsmod.h"
-#include "armor_def.h"
+#include "../items/definitions/statsmod.h"
+#include "definitions/armor_def.h"
 
 
 //Represents an equipslot for a player's character sheet

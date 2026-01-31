@@ -1,7 +1,7 @@
 #include "npc_ai.h"
 #include "player.h"
 #include "npc.h"
-#include "../Loot/rng.h"
+#include "../loot/rng.h"
 NPC_AI::NPC_AI(NPC* controlledNPC, Player* target)
     : npc(controlledNPC), player(target), state(AIState::Normal) {}
 

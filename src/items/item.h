@@ -8,7 +8,7 @@
 #include <utility>
 #include <string>
 #include <cassert>
-#include "statsmod.h"
+#include "../items/definitions/statsmod.h"
 #include "item_def.h"
 
 class Player;

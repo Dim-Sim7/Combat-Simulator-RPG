@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Loot/loot_context.h"
+#include "../loot/loot_context.h"
 #include "item_database.h"
 #include "item.h"
 #include "weapon.h"

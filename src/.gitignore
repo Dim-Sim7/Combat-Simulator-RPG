@@ -1,0 +1,26 @@
+# Build directories
+build/
+cmake-build*/
+out/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+Makefile
+
+# Compiled binaries
+*.o
+*.obj
+*.exe
+*.out
+
+# Static / shared libraries
+*.a
+*.so
+*.dylib
+
+# IDE noise (optional but recommended)
+.vscode/
+.idea/

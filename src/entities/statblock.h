@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <utility>
 #include <iostream>     // for std::cout in levelUp()
-#include "statsmod.h"
+#include "../items/definitions/statsmod.h"
 
 /**
  * @brief Holds base combat statistics for an entity (damage, armor, level).

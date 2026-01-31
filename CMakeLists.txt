@@ -1,49 +1,86 @@
-cmake_minimum_required(VERSION 3.10)
-project(warcraft_roguelike)
+cmake_minimum_required(VERSION 3.14)
+project(combat_simulator LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Add main source folder
-include_directories(src)
+# -----------------------------
+# Fetch Catch2 (no system install required)
+# -----------------------------
+include(FetchContent)
 
-# Add your main source files (if you have an executable)
-add_executable(warcraft_roguelike src/main.cpp src/statblock.cpp)
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG v3.5.2
+)
 
-# --- Tests ---
-# Define the test executable
+FetchContent_MakeAvailable(Catch2)
+
+# -----------------------------
+# Core library
+# -----------------------------
+add_library(combat_core
+    src/entities/statblock.cpp
+    src/entities/pointwell.cpp
+    src/entities/entity.cpp
+    src/entities/player.cpp
+    src/entities/npc.cpp
+    src/entities/npc_ai.cpp
+
+    src/items/item.cpp
+    src/items/armor.cpp
+    src/items/weapon.cpp 
+    src/items/inventory.cpp
+    src/items/equipslots.cpp
+    src/items/item_database.cpp 
+    src/items/item_factory.cpp 
+
+    src/loot/enemy_loot_filler.cpp 
+    src/loot/gold.cpp 
+    src/loot/lootable_value.cpp 
+
+    src/battlesystem.cpp
+    
+)
+
+target_include_directories(combat_core PUBLIC src)
+
+# -----------------------------
+# Main executable
+# -----------------------------
+add_executable(combat_sim
+    src/main.cpp
+)
+
+target_link_libraries(combat_sim PRIVATE combat_core)
+
+# -----------------------------
+# Tests
+# -----------------------------
+enable_testing()
+
 add_executable(test_stat_block
     tests/test_stat_block.cpp
-    src/statblock.cpp
 )
+target_link_libraries(test_stat_block PRIVATE combat_core Catch2::Catch2WithMain)
 
 add_executable(test_pointwell
     tests/test_pointwell.cpp
-    src/pointwell.cpp
 )
+target_link_libraries(test_pointwell PRIVATE combat_core Catch2::Catch2WithMain)
 
 add_executable(test_entity
     tests/test_entity.cpp
-    src/entity.cpp
-    src/pointwell.cpp
-    src/statblock.cpp
-)   
+)
+target_link_libraries(test_entity PRIVATE combat_core Catch2::Catch2WithMain)
 
 add_executable(test_armor
     tests/test_armor.cpp
-    src/armor.cpp
-    src/item.cpp
-    src/pointwell.cpp
 )
+target_link_libraries(test_armor PRIVATE combat_core Catch2::Catch2WithMain)
 
-# Link with Catch2 (if installed system-wide)
-find_package(Catch2 3 REQUIRED)
-target_link_libraries(test_stat_block PRIVATE Catch2::Catch2WithMain)
-target_link_libraries(test_pointwell PRIVATE Catch2::Catch2WithMain)
-target_link_libraries(test_entity PRIVATE Catch2::Catch2WithMain)
-target_link_libraries(test_armor PRIVATE Catch2::Catch2WithMain)
-
-#COMMANDS I NEED TO KNOW
-#rm -rf build
-#cmake ..
-#make
-# /test_....
+add_test(NAME StatBlockTests COMMAND test_stat_block)
+add_test(NAME PointwellTests COMMAND test_pointwell)
+add_test(NAME EntityTests COMMAND test_entity)
+add_test(NAME ArmorTests COMMAND test_armor)

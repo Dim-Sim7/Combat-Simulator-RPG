@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/combat_sim.dir/src/main.cpp.o -o combat_sim  libcombat_core.a 
