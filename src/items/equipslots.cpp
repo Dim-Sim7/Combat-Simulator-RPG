@@ -5,7 +5,9 @@
 //if an item is in an equipslot, it modifies the player's stats
 //how to represent equipslot? an array of items that has an enum class
 
-EquipSlots::EquipSlots() {}
+EquipSlots::EquipSlots() 
+        : equipSlotArray{}
+    {}
 
 void EquipSlots::equipItem(Item& itemToEquip, EQUIP_SLOT_TYPE equipSlot)
 {
@@ -38,4 +40,3 @@ Item* EquipSlots::getItemFromSlot(EQUIP_SLOT_TYPE equipSlot)
 {
     return equipSlotArray[static_cast<size_t>(equipSlot)];
 }
-

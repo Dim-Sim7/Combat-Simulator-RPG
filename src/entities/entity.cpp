@@ -6,8 +6,8 @@
 Entity::Entity() :  stats(), HP(), abilities(), name(""){} //initialiser default list construction
 
 Entity::Entity(const StatBlock& statsInit, 
-    const int& hpInitCurr, 
-    const int& hpInitMax, 
+    const int hpInitCurr, 
+    const int hpInitMax, 
     const std::vector<Abilities>& abilitiesInit,
     const std::string& inName)
     : stats(statsInit), HP(hpInitMax, hpInitCurr), abilities(abilitiesInit), name(inName)
@@ -45,7 +45,7 @@ double Entity::getGlobalCooldown() const { return globalCooldown; }
 int Entity::getMaxHP() const { return HP.getMax(); }
 int Entity::getCurrentHP() const { return HP.getCurrent(); }
 
-bool Entity::isDead()
+bool Entity::isDead() const
 {
     if (HP.getCurrent() <= 0)
     {
@@ -56,10 +56,13 @@ bool Entity::isDead()
 
 bool Entity::isCrit() const
 {
+    //zzz... refactor to allow for crit chance stat
     static thread_local std::mt19937 gen(std::random_device{}());
     std::uniform_int_distribution<> distrib(1, 100);
     int randomNumber = distrib(gen);
-    return randomNumber <= 5;
+    //base crit chance is 5%
+    //final crit chance = base + entity crit chance 
+    return randomNumber <= stats.getCritChance();
 }
 
 void Entity::attack(Entity& target, float currentTime) //attack with base damage, will always have a target
@@ -68,8 +71,14 @@ void Entity::attack(Entity& target, float currentTime) //attack with base damage
     if (currentTime < nextAutoAttackTime)
         return;
     int damage = stats.rollDamage();
-    if (isCrit())
+    /*
+    zzz (apply crit chance)
+    
+    */
+    if (isCrit()) {
         damage *= 2;
+        std::cout << "Crit!\n";   
+    }
     target.takeDamage(damage);
 
     std::cout << name << " hits " << target.getEntityName()
@@ -129,14 +138,14 @@ void Entity::castSpell(Entity* target, Abilities& spell, float currentTime) //at
 }
 
 
-void Entity::takeDamage(const int& damage)
+void Entity::takeDamage(const int damage)
 {
     float reduction = calcDamageReduction();
     int finalDamage = static_cast<int>(damage * (1.0f - reduction));
     HP.reduceCurrent(finalDamage);
 }
 
-void Entity::heal(const int& heal)
+void Entity::heal(const int heal)
 {
     HP.increaseCurrent(heal);
 }

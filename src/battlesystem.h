@@ -92,6 +92,7 @@ public:
             {
                 player.gainExp(enemy.expOnDeath());
                 enemy.onDeath();
+                //ADD LOOT HERE
                 //player.addLoot(enemy.dropLoot());
                 running = false;
             }

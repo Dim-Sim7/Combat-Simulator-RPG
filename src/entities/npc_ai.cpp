@@ -1,6 +1,7 @@
 #include "npc_ai.h"
 #include "player.h"
 #include "npc.h"
+#include "../Loot/rng.h"
 NPC_AI::NPC_AI(NPC* controlledNPC, Player* target)
     : npc(controlledNPC), player(target), state(AIState::Normal) {}
 
@@ -11,22 +12,27 @@ void NPC_AI::update(float currentTime)
     float hpPct = static_cast<float>(npc->getHP().getCurrent()) / npc->getHP().getMax();
 
     //escape logic
-    if (hpPct < 0.15f)
-        state = AIState::Running;
-    
-    if (state == AIState::Running)
+    if (hpPct < 0.15f && state != AIState::Fleeing)
     {
-        if (chance(0.05f))
+        state = AIState::Fleeing;
+        fleeStartTime = currentTime;
+    }
+        
+    
+    if (state == AIState::Fleeing)
+    {
+        std::cout << npc->getEntityName() << " is almost dead!\n";
+        if (currentTime - fleeStartTime > 2.5f || chance(0.05f))
         {
-            npc->escapeCombat();
+            npc->escapeCombat();0
             return;
         }
-        // Cannot act while running
-        return;
+        // Cannot act while Fleeing
+        continue;
     }
 
     //healing logic
-    if (hpPct < 0.30f)
+    if (hpPct <= 0.30f)
     {
         if (tryHeal(currentTime)) return;
         if (tryPotion()) return;
@@ -69,21 +75,24 @@ bool NPC_AI::tryPotion()
 
 bool NPC_AI::tryCastOffensive(float time)
 {
-    std::vector<Abilities*> available;
+    Abilities* best = nullptr;
 
     for (auto& spell: npc->getAbilities())
     {
-        if (spell.getType() != ABILITYTYPE::HEAL && spell.isOffCD(time))
-            available.push_back(&spell);
+        if (spell.getType() == ABILITYTYPE::HEAL)
+            continue;
+
+        if (!spell.isOffCD(time))
+            continue;
+        
+        if (!best || spell.getDamageRange().second > best->getDamageRange().second)
+            best = &spell;
     }
 
-    if (available.empty())
+    if (!best)
         return false;
-
-    int index = rand() % available.size();
-    Abilities* chosenSpell = available[index];
-
-    npc->castSpell(static_cast<Entity*>(player), *chosenSpell, time);
+    
+    npc->castSpell(player, *best, time);
     return true;
 }
 

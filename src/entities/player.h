@@ -1,18 +1,10 @@
 #pragma once
 
 #include "entity.h"
-#include <cstdint>
-#include <random>
-#include <cmath>
-#include <vector>
 #include <memory>
-#include <cassert>
-#include <utility>
-#include <array>
-#include <optional>
-#include "equipslots.h"
-#include "abilities_pool.h"
-#include "inventory.h"
+#include <vector>
+#include <string>
+
 
 class Item;
 class Inventory;
@@ -25,38 +17,34 @@ class StatBlock;
 class Player: public Entity {
 
 public:    
-    std::unique_ptr<Inventory> inventory;
-    std::unique_ptr<EquipSlots> equipSlots;
-    std::unique_ptr<AbilitiesPool> aPool;
-    ~Player();
+
     Player();
 
     Player(const StatBlock& statsInit, 
-        const int& hpInitCurr, 
-        const int& hpInitMax, 
+        const int hpInitCurr, 
+        const int hpInitMax, 
         const std::vector<Abilities>& abilitiesInit,
         const std::string& nameInit);
     
     void gainExp(int earnedEXP);
 
 
-    void onDeath();
-
+    void onDeath() override;
+    
+    bool equipItem(Item& item);
 
 private:
     PointWell EXP;
-    
-
-
     //Handle item equip logic
-    void equipWeapon(Item& itemToEquip);
-
-    //IMPLEMENT
+    bool equipWeapon(Item& itemToEquip);
+    bool equipArmor(Item& itemToEquip);
     void recalculateStats();
-
     void levelUp();
-
     int getEXPToLevel();
+
+    std::unique_ptr<Inventory> inventory;
+    std::unique_ptr<EquipSlots> equipSlots;
+    std::unique_ptr<AbilitiesPool> aPool;
 
     
 

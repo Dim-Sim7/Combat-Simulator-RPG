@@ -1,9 +1,9 @@
 #pragma once
 #include "pointwell.h"
 #include "statblock.h"
-#include "abilities.h"
+#include "../abilities/abilities.h"
 #include <string>
-#include <iostream>
+
 #include <memory>
 #include <vector>
 #include <random>
@@ -27,12 +27,13 @@ class Entity {
 public:
     Entity();
     explicit Entity(const StatBlock& statsInit, 
-        const int& hpInitCurr, 
-        const int& hpInitMax, 
+        const int hpInitCurr, 
+        const int hpInitMax, 
         const std::vector<Abilities>& abilitiesInit,
         const std::string& inName);
+    virtual ~Entity() = default;
 
-    CastState cast;
+   
 
     StatBlock& getStats();
     PointWell& getHP();
@@ -49,7 +50,7 @@ public:
     void setHP(PointWell inHP);
     void setAbilities(std::vector<Abilities> inAbilities);
 
-    bool isDead();
+    bool isDead() const;
     bool isCrit() const;
     void onDeath();
 
@@ -61,9 +62,9 @@ public:
     void attack(Entity& target, float currentTime);
     void castSpell(Entity* target, Abilities& spell, float currentTime);
 
-    void takeDamage(const int& damage);
+    void takeDamage(const int damage);
     float calcDamageReduction() const;
-    void heal(const int& heal);
+    void heal(const int heal);
 
     double getNextAutoAttackTime() const;
     void setNextAutoAttackTime(double t);
@@ -73,6 +74,8 @@ public:
 
     double getAttackSpeed() const;
     double getGlobalCooldown() const;
+
+
 
 protected:
     StatBlock stats;

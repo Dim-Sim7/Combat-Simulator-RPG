@@ -65,6 +65,8 @@ public:
     [[nodiscard]] std::optional<int> getArmorBuff() const;
 
     [[nodiscard]] std::optional<int> getHealthBuff() const;
+
+    [[nodiscard]] std::optional<int> getCritBuff() const;
     
     void setRarity(const Rarity& rarity);
     Rarity rarity() const;

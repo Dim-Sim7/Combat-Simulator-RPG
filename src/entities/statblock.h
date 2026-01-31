@@ -16,11 +16,11 @@ private:
     std::pair<int, int> damage;  // Damage range (min, max)
     int armor;                      // Defensive stat
     int level;                      // Current level of the entity
-
+    int critChance;
     //BONUS STATS FROM ARMOR, BUFFS, ETC...
     std::pair<int, int> bonusDamage;
-    int bonusArmor;
-
+    std::optional<int> bonusArmor;
+    std::optional<int> bonusCrit;
 public:
 
     StatBlock();
@@ -30,6 +30,7 @@ public:
     [[nodiscard]] std::pair<int, int> getDamageRange() const;
     [[nodiscard]] int getArmor() const;
     [[nodiscard]] int getLevel() const;
+    [[nodiscard]] int getCritChance() const;
 
     void setBaseDamage(const std::pair<int, int>& inDamage);
     void setBaseArmor(int inArmor);
@@ -37,7 +38,9 @@ public:
 
     void increaseDamage(const std::pair<int, int>& dmg);
     void increaseArmor(int arm);
+    void increaseCritChance(int inCrit);
     void levelUp();
+    
 
     [[nodiscard]] int rollDamage() const;
 

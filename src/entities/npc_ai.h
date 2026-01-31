@@ -3,7 +3,7 @@
 #include <random>
 
 
-enum class AIState{ Normal, Running };
+enum class AIState{ Normal, Fleeing };
 class NPC;
 class Player;
 class NPC_AI
@@ -17,14 +17,12 @@ private:
     Player* player;
     AIState state;
 
+    float fleeStartTime = -1.f;
     bool tryHeal(float time);
-
     bool tryPotion();
-
     bool tryCastOffensive(float time);
 
     float randFloat();
-
     bool chance(float p);
 
 };

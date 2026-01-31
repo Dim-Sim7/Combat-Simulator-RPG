@@ -1,2 +1,0 @@
-int inId, int minDamage, int maxDamage, float speed, WEAPONTYPE weaponType
-1001,8,15,2.4,SWORD

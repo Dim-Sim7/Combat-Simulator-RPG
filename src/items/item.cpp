@@ -1,7 +1,7 @@
 #include "item.h"
 
 
-Item::Item() : name(""), id(0), type(ITEMTYPE::MISC), stackSize(0), stackable(false) {}
+Item::Item() : name(""), id(0), type(ITEMTYPE::MISC), stackSize(0), stackable(false), rarity_(Rarity::Common) {}
 
 Item::Item(std::string inName, int inId, ITEMTYPE inType, int inStackSize, bool inStackable)
 : name(inName), id(inId), type(inType), stackSize(inStackSize), stackable(inStackable) {}
@@ -30,47 +30,52 @@ void Item::decrementStackSize() {
 
 bool Item::noMoreStackSize() const { return stackSize == 0; }
 
-const StatModifier& Item::getStatModifier() const {
-    return statMod;
+const statMod_ifier& Item::getstatMod_ifier() const {
+    return statMod_;
 }
 
 void Item::setDamageBuff(std::pair<int, int> inDamage)
 {
-    statMod.damage = inDamage;
+    statMod_.damage = inDamage;
 }
 
 void Item::setSpeedBuff(float inSpeed)
 {
-    statMod.speed = inSpeed;
+    statMod_.speed = inSpeed;
 }
 
 void Item::setArmorBuff(int inArmor)
 {
-    statMod.armor = inArmor;
+    statMod_.armor = inArmor;
 }
 
 void Item::setHealthBuff(int inHealth)
 {
-    statMod.health = inHealth;
+    statMod_.health = inHealth;
 }
 
 [[nodiscard]] std::pair<int,int> Item::getDamageBuff() const {
-    return statMod.damage.value_or(std::pair<int,int>{0, 0});
+    return statMod_.damage.value_or(std::pair<int,int>{0, 0});
 }
 
 [[nodiscard]] std::optional<float> Item::getSpeedBuff() const
 {
-    return statMod.speed;
+    return statMod_.speed;
 }
 
 [[nodiscard]] std::optional<int> Item::getArmorBuff() const
 {
-    return statMod.armor;
+    return statMod_.armor;
 }
 
 [[nodiscard]] std::optional<int> Item::getHealthBuff() const
 {
-    return statMod.health;
+    return statMod_.health;
+}
+
+[[nodiscard]] std::optional<int> Item::getCritBuff() const
+{
+    return statMod_.crit;
 }
 
 void Item::setRarity(const Rarity& rarity) {

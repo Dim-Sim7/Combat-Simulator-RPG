@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "item.h"
-#include "pointwell.h"
+#include "../entities/pointwell.h"
 #include "armor_def.h"
 
 
@@ -18,7 +18,13 @@ public:
     [[nodiscard]] int getCurrDurability() const;
     [[nodiscard]] int getMaxDurability() const;
 
-    
+    ARMORTYPE armorType() {
+        return armorType_;
+    }
+
+    ARMORSLOT armorSlot() {
+        return armorSlot_;
+    }
     
 private:
     int armor_;

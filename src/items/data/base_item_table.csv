@@ -1,0 +1,108 @@
+item_id,name,item_type,stackable
+
+# --- WEAPONS ---
+1001,Rusted Iron Dagger,Weapon,false
+1002,Sharpened Iron Dagger,Weapon,false
+1003,Assassin’s Dirk,Weapon,false
+
+1010,Wrapped Knuckle Fists,Weapon,false
+1011,Spiked Knuckle Fists,Weapon,false
+1012,Steel Claw Fists,Weapon,false
+
+1020,Iron Hatchet,Weapon,false
+1021,Bearded Iron Axe,Weapon,false
+1022,Executioner’s Axe,Weapon,false
+
+1030,Iron Cudgel,Weapon,false
+1031,Reinforced Iron Mace,Weapon,false
+1032,Crushing War Mace,Weapon,false
+
+1040,Iron Shortsword,Weapon,false
+1041,Tempered Iron Sword,Weapon,false
+1042,Veteran’s Longsword,Weapon,false
+
+1050,Ashwood Polearm,Weapon,false
+1051,Steel-Edged Halberd,Weapon,false
+
+1060,Runed Oak Stave,Weapon,false
+1061,Elder Mage’s Stave,Weapon,false
+
+1070,Brutal Great Axe,Weapon,false
+1071,Colossal Execution Axe,Weapon,false
+
+1080,Iron Maul,Weapon,false
+1081,Gravewarden’s Maul,Weapon,false
+
+1090,Knight’s Greatsword,Weapon,false
+1091,Champion’s Greatsword,Weapon,false
+
+1100,Hunter’s Shortbow,Weapon,false
+1101,Reinforced Longbow,Weapon,false
+
+1110,Crankshot Crossbow,Weapon,false
+1111,Siege Crossbow,Weapon,false
+
+1120,Blackpowder Musket,Weapon,false
+1121,Heavy Caliber Rifle,Weapon,false
+
+1130,Weighted Throwing Knives,Weapon,false
+1131,Barbed Throwing Axes,Weapon,false
+
+1140,Apprentice’s Wand,Weapon,false
+1141,Arcanist’s Focus Wand,Weapon,false
+
+
+# --- ARMOR (LEATHER) ---
+2001,Leather Vest,Armor,false
+2002,Leather Cap,Armor,false
+2003,Leather Gloves,Armor,false
+2004,Leather Leggings,Armor,false
+2005,Leather Boots,Armor,false
+
+# --- ARMOR (CHAINMAIL) ---
+2010,Chainmail Hauberk,Armor,false
+2011,Chainmail Coif,Armor,false
+2012,Chainmail Gauntlets,Armor,false
+2013,Chainmail Legguards,Armor,false
+2014,Chainmail Sabatons,Armor,false
+
+# --- ARMOR (PLATE) ---
+2020,Steel Breastplate,Armor,false
+2021,Steel Helm,Armor,false
+2022,Steel Gauntlets,Armor,false
+2023,Steel Greaves,Armor,false
+2024,Steel Sabatons,Armor,false
+
+# --- ARMOR (CLOTH) ---
+2030,Cloth Robe,Armor,false
+2031,Cloth Hood,Armor,false
+2032,Cloth Handwraps,Armor,false
+2033,Cloth Trousers,Armor,false
+2034,Cloth Slippers,Armor,false
+
+
+# --- CONSUMABLES ---
+3001,Minor Health Potion,Consumable,true
+3002,Lesser Health Potion,Consumable,true
+3003,Greater Health Potion,Consumable,true
+3004,Major Health Potion,Consumable,true
+
+3010,Minor Ironhide Tonic,Consumable,true
+3011,Ironhide Elixir,Consumable,true
+3012,Greater Ironhide Draught,Consumable,true
+
+3020,Minor Swiftness Tonic,Consumable,true
+3021,Swiftness Elixir,Consumable,true
+3022,Greater Swiftness Draught,Consumable,true
+
+3030,Crude Fire Bomb,Consumable,true
+3031,Refined Fire Bomb,Consumable,true
+3032,Alchemist’s Fire Bomb,Consumable,true
+
+3040,Weak Venom Flask,Consumable,true
+3041,Potent Venom Flask,Consumable,true
+3042,Deadly Venom Flask,Consumable,true
+
+3050,Elixir of the Iron Guard,Consumable,false
+3051,Elixir of the Swift Blade,Consumable,false
+3052,Elixir of the Juggernaut,Consumable,false

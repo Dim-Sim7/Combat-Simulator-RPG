@@ -1,75 +1,61 @@
 #pragma once
 
-#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <vector>
 #include <string>
+#include <iostream>
 
-#include "rng.cpp"
-//This class represents a loot table for a container to generate based on the source context
-//It includes methods to assign weights 
+#include "rng.h"
+#include "loot_context.h"
 
 struct LootRow {
     int itemId;
     int minLevel;
     int maxLevel;
     int baseWeight;
-    bool isBoss;
+    bool bossOnly;
 };
 
-class Table {
-
+class LootTable {
 public:
-    Table(const LootContext& ctx) {
-        read_master_table(lootIdTable&, ctx);
-        //rollitems
-        //upgrade items based on ctx
-        //return items
+    explicit LootTable(const LootContext& ctx) {
+        readMasterTable(ctx);
+        setItemsToHit(ctx);
     }
 
-    void hitItems(Container& container, const LootContext& ctx) {
-        int sum = sumWeights();
-        setItemsToHit();
+    std::vector<int> rollItemIds() const {
+        std::vector<int> result;
 
-        //roll the number of items to hit
-        int numberOfItems = randomInt(itemsToHit.first, itemsToHit.second);
+        int count = randomInt(itemsToHit_.first, itemsToHit_.second);
+        int totalWeight = sumWeights();
 
-        for (size_t i = 0; i < numberOfItems; i++) {
-            int roll = randomInt(0, sum - 1);
-            int itemId = hitItem(roll);
-
-            baseItems.push_back(getRolledItem(itemId));
+        for (int i = 0; i < count; ++i) {
+            int roll = randomInt(0, totalWeight - 1);
+            result.push_back(hitItem(roll));
         }
 
+        return result;
     }
-    
+
 private:
-    std::vector<LootRow> lootIdTable;
-    std::vector<std::weak_ptr<Lootable>> baseItems;
+    std::vector<LootRow> lootRows_;
+    std::pair<int, int> itemsToHit_{0, 0};
 
-    std::pair<int, int> itemsToHit;
-
-    void read_master_table(const LootContext& ctx) {
-        //read master table
-        //fill loot table with id's of base items with ctx parameters
-        //e.g. level 3 mob, beast type, dungeon
+    void readMasterTable(const LootContext& ctx) {
         std::ifstream file("master_loot_table.csv");
         if (!file.is_open()) {
-            std::cerr << "Error opening file" << std::endl;
-            return 1;
+            std::cerr << "Error opening loot table\n";
+            return;
         }
 
         std::string line;
-        // Skip header
-        std::getline(file, line);
-        
+        std::getline(file, line); // header
 
         while (std::getline(file, line)) {
             std::stringstream ss(line);
-            std::string token;
-
             LootRow row;
+            std::string token;
 
             std::getline(ss, token, ',');
             row.itemId = std::stoi(token);
@@ -80,66 +66,59 @@ private:
             std::getline(ss, token, ',');
             row.maxLevel = std::stoi(token);
 
-            if (ctx.level < row.minLevel || ctx.level > row.maxLevel) {
-                continue; //row is destroyed at next iteration
-            }
+            if (ctx.level < row.minLevel || ctx.level > row.maxLevel)
+                continue;
 
             std::getline(ss, token, ',');
             row.baseWeight = std::stoi(token);
 
             std::getline(ss, token, ',');
-            row.isBoss = parseBool(token);
+            row.bossOnly = parseBool(token);
 
-            lootIdTable.push_back(row);
+            if (row.bossOnly && ctx.encounterType != EncounterType::Boss)
+                continue;
 
+            lootRows_.push_back(row);
         }
-
     }
 
-    int hitItem(int roll) {
+    int hitItem(int roll) const {
         int running = 0;
-
-        for (auto& entry : lootIdTable()) {
-            running += entry.baseWeight;
-            if (roll < running) {
-                return entry.itemId;
-            }
+        for (const auto& row : lootRows_) {
+            running += row.baseWeight;
+            if (roll < running)
+                return row.itemId;
         }
+        return lootRows_.back().itemId;
     }
 
-    int sumWeights() {
-        int sum{0};
-        for (auto& c : lootIdTable) {
-            sum += c.baseWeight;
-        }
-        
+    int sumWeights() const {
+        int sum = 0;
+        for (const auto& row : lootRows_)
+            sum += row.baseWeight;
         return sum;
     }
 
-    void setItemsToHit(const LootContext% ctx) {
-        int maxItems = 2;
+    void setItemsToHit(const LootContext& ctx) {
         int minItems = 0;
+        int maxItems = 2;
 
-        if (ctx.isDungeon && ctx.isElite) {
-            maxItems = 3;
-        }
+        if (ctx.locationType == LocationType::Dungeon)
+            maxItems++;
 
-        if (ctx.isBoss) {
-            maxItems = 6;
+        if (ctx.encounterType == EncounterType::Elite)
+            maxItems++;
+
+        if (ctx.encounterType == EncounterType::Boss) {
             minItems = 3;
+            maxItems = 6;
         }
 
-        if (chestTier > 1) {
-            maxItems = 5;
-            minItems = 2;
+        if (ctx.chestTier && *ctx.chestTier > 1) {
+            minItems++;
+            maxItems += 2;
         }
 
-        itemsToHit = std::make_pair(minItems, maxItems);
+        itemsToHit_ = {minItems, maxItems};
     }
-
-    LootableItem& getHitItem(int itemId) {
-
-    }
-
-
 };
