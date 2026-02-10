@@ -9,7 +9,7 @@
 #include <string>
 #include <cassert>
 #include "../items/definitions/statsmod.h"
-#include "item_def.h"
+#include "definitions/item_def.h"
 
 class Player;
 enum class ITEMTYPE { WEAPON, ARMOR, CONSUMABLE, MISC };
@@ -52,11 +52,10 @@ public:
     const StatModifier& getStatModifier() const;
 
     void setDamageBuff(std::pair<int, int> inDamage);
-
     void setSpeedBuff(float inSpeed);
     void setArmorBuff(int inArmor);
-
     void setHealthBuff(int inHealth);
+    void setCritBuff(float inCrit);
 
     [[nodiscard]] std::pair<int,int> getDamageBuff() const;
 
@@ -66,7 +65,7 @@ public:
 
     [[nodiscard]] std::optional<int> getHealthBuff() const;
 
-    [[nodiscard]] std::optional<int> getCritBuff() const;
+    [[nodiscard]] std::optional<float> getCritBuff() const;
     
     void setRarity(const Rarity& rarity);
     Rarity rarity() const;

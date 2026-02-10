@@ -55,4 +55,29 @@ struct StatModifier {
 
         return std::nullopt;
     }
+    void addDamage(std::pair<int,int> dmg) {
+        if (damage)
+            damage = std::pair{
+                damage->first  + dmg.first,
+                damage->second + dmg.second
+            };
+        else
+            damage = dmg;
+    }
+
+    void addSpeed(float v) {
+        speed = speed ? *speed + v : v;
+    }
+
+    void addArmor(int v) {
+        armor = armor ? *armor + v : v;
+    }
+
+    void addHealth(int v) {
+        health = health ? *health + v : v;
+    }
+
+    void addCrit(float v) {
+        crit = crit ? *crit + v : v;
+    }
 };

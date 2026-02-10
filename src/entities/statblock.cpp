@@ -9,15 +9,16 @@ StatBlock::StatBlock()
     : damage({1,4})
     , armor(1)
     , level(1)
-    , critChance(5)
+    , critChance(0.05f)
     , bonusDamage({0,0})
     , bonusArmor(0)
-    , bonusCrit(0);
+    , bonusCrit(0)
+    , bonusHealth(0);
     
 {}
 
 StatBlock::StatBlock(std::pair<int, int> dmg, int arm, int lvl)
-    : damage(dmg), armor(arm), level(lvl), critChance(5), bonusDamage({0,0}), bonusArmor(0), bonusCrit(0) {}
+    : damage(dmg), armor(arm), level(lvl), critChance(5), bonusDamage({0,0}), bonusArmor(0), bonusCrit(0), bonusHealth(0) {}
 
 
 // ----- Getters -----
@@ -31,12 +32,12 @@ StatBlock::StatBlock(std::pair<int, int> dmg, int arm, int lvl)
 
 [[nodiscard]] int StatBlock::getArmor() const
 {
-    return armor + bonusArmor;
+    return armor + bonusArmor.value_or(0);
 }
 
 [[nodiscard]] int StatBlock::getLevel() const { return level; }
 
-[[nodiscard]] int StatBlock::getCritChance() const { return critChance + bonusCrit; }
+[[nodiscard]] float StatBlock::getCritChance() const { return critChance + bonusCrit.value_or(0.0f); }
 
 
 // ----- Setters -----
@@ -65,7 +66,7 @@ void StatBlock::increaseArmor(int arm) {
     armor += arm;
 }
 
-void StatBlock::increaseCritChance(int inCrit) {
+void StatBlock::increaseCritChance(float inCrit) {
     critChance += inCrit;
 }
 
@@ -94,7 +95,9 @@ int StatBlock::rollDamage() const {
 
 void StatBlock::applyStatModifier(const StatModifier& mod)
 {
-    bonusArmor  = mod.armor.value_or(0);
+    bonusArmor  = mod.armor;
     bonusDamage = mod.damage.value_or(std::make_pair(0,0));
-    bonusCrit = mod.crit.value_or(0);
+    bonusCrit = mod.crit;
+    bonusHealth = mod.health;    
 }
+

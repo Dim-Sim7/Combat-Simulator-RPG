@@ -56,13 +56,10 @@ bool Entity::isDead() const
 
 bool Entity::isCrit() const
 {
-    //zzz... refactor to allow for crit chance stat
+
     static thread_local std::mt19937 gen(std::random_device{}());
-    std::uniform_int_distribution<> distrib(1, 100);
-    int randomNumber = distrib(gen);
-    //base crit chance is 5%
-    //final crit chance = base + entity crit chance 
-    return randomNumber <= stats.getCritChance();
+    std::bernoulli_distribution crit(stats.getCritChance());
+    return crit(gen);
 }
 
 void Entity::attack(Entity& target, float currentTime) //attack with base damage, will always have a target

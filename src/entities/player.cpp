@@ -118,6 +118,10 @@ void Player::recalculateStats()
 {
     StatModifier newStatMod = equipSlots->getTotalStatMods();
     stats.applyStatModifier(newStatMod);
+
+    int newMaxHP = HP.getMax() + newStatMod.health.value_or(0);
+    HP.setMax(newMaxHP);
+    HP.increaseCurrent(newStatMod.health.value_or(0));
 }
 
 void Player::levelUp()

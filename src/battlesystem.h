@@ -31,29 +31,24 @@ public:
     void battleLoop(Player& player, NPC& enemy);
 
 private:
-    // === AI ===
     std::unique_ptr<NPC_AI> enemyAI;
 
-    // === Time ===
     std::chrono::steady_clock::time_point startTime;
     float gcdEndTime;
 
     float getTime();
 
-    // === Command Queue ===
     std::mutex commandMutex;
     std::queue<Command> commandQueue;
 
     void pushCommand(PlayerCommand command, float currentTime, const std::string& data = "");
     bool popCommand(Command& out);
 
-    // === Input Thread ===
     std::atomic<bool> running;
     std::thread inputThread;
 
     void inputLoop(Player& player);
 
-    // === Combat Handling ===
     void handleCommand(Player& player, NPC& enemy, const Command& cmd, float now);
     void handleSpellCast(Entity* caster, float now);
 

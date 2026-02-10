@@ -4,7 +4,8 @@
 #include <cstdint>
 #include <random>
 #include <iostream>
-
+#include <any>
+#include <find_if>
 //enemy. Has a loot table (inventory), health, damage, spells. Basically same as player without leveling system
 //on death, an enemy can drop items. Enemies are created from scraped data on classicdb.
 
