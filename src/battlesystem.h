@@ -9,10 +9,9 @@
 #include <string>
 
 #include "entities/npc_ai.h"
-#include "player.h"
-#include "npc.h"
-#include "item.h"
-#include "inventory.h"
+#include "entities/player.h"
+#include "entities/npc.h"
+
 
 enum class PlayerCommand { Attack, Spell, Consumable, Run, None };
 
@@ -50,11 +49,6 @@ private:
     void inputLoop(Player& player);
 
     void handleCommand(Player& player, NPC& enemy, const Command& cmd, float now);
-    void handleSpellCast(Entity* caster, float now);
 
-    void tryAttack(Player& player, NPC& enemy, float now);
-    void tryCastSpell(Player& player, NPC& enemy, const std::string& spellName, float now);
-    void tryUseConsumable(Player& player, const std::string& name, float now);
 
-    void applyConsumableEffect(Player* player, const StatModifier& statMod);
 };

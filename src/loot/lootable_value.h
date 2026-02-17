@@ -1,6 +1,6 @@
 #pragma once
 
-
+#include "lootable.h"
 class LootableValue : public Lootable {
 
 public:

@@ -25,7 +25,7 @@ StatModifier EquipSlots::getTotalStatMods()
     for (auto& item : equipSlotArray)
     {
         if (item)
-            totalStatMod += item->getStatModifier();
+            totalStatMod = totalStatMod + item->getStatModifier();
     }
 
     return totalStatMod;

@@ -42,9 +42,7 @@ private:
     void levelUp();
     int getEXPToLevel();
 
-    std::unique_ptr<Inventory> inventory;
-    std::unique_ptr<EquipSlots> equipSlots;
-    std::unique_ptr<AbilitiesPool> aPool;
+
 
     
 

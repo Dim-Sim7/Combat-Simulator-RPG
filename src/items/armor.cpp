@@ -1,13 +1,13 @@
 #include "armor.h"
 #include <cassert>
 
-Armor::Armor() : Item(),  armor(1), durability(1,1) {}
+Armor::Armor() : Item(),  armor_(1), durability(1,1) {}
 
 Armor::Armor(std::string inName, int inId,
             int inCurrDurability, int inMaxDurability, 
             int inArmor, ARMORTYPE inArmorType, ARMORSLOT inArmorSlot) :
     Item(std::move(inName), inId, ITEMTYPE::ARMOR, 1, false), 
-    armor(inArmor), armorType(inArmorType), armorSlot(inArmorSlot) 
+    armor_(inArmor), armorType_(inArmorType), armorSlot_(inArmorSlot) 
     { 
         durability.setMax(inMaxDurability);
         durability.setCurrent(inCurrDurability);

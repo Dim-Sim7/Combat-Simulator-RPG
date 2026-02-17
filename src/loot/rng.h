@@ -1,5 +1,5 @@
 #pragma once
-
+#include <random>
 class RNG {
 public:
 
@@ -9,7 +9,7 @@ public:
     }
 
     static int randomInt(int min, int max) {
-        std::uniform_real_distribution<int> dist (min, max);
+        std::uniform_int_distribution<int> dist (min, max);
         return dist(engine());
     }
 

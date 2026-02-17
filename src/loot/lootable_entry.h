@@ -8,8 +8,6 @@
 #include "item.h"
 #include <iostream>
 
-
-
 struct LootEntry {
     int itemId;
     int weight;

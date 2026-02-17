@@ -1,9 +1,8 @@
 #include "player.h"
+#include "../items/item.h"
+#include "../items/weapon.h"
 
 Player::Player() : Entity(), 
-    inventory(std::make_unique<Inventory>()), 
-    equipSlots(std::make_unique<EquipSlots>()), 
-    aPool(std::make_unique<AbilitiesPool>()), 
     EXP(100u, 0u) {}
 
 Player::Player(const StatBlock& statsInit, 
@@ -12,9 +11,6 @@ Player::Player(const StatBlock& statsInit,
     const std::vector<Abilities>& abilitiesInit,
     const std::string& nameInit)
     : Entity(statsInit, hpInitMax, hpInitCurr, abilitiesInit, nameInit),
-    inventory(std::make_unique<Inventory>()),
-    equipSlots(std::make_unique<EquipSlots>()),
-    aPool(std::make_unique<AbilitiesPool>()),
     EXP(100u, 0u) {}
 
 
@@ -32,9 +28,17 @@ void Player::gainExp(int earnedEXP)
 }
 
 
-void Player::onDeath() override
+void Player::onDeath()
 {
     std::cout << getEntityName() << " has died!" << '\n';
+}
+
+void Player::unequipToInventory(EQUIP_SLOT_TYPE slot)
+{
+    if (auto* item = equipSlots->getItemFromSlot(slot)) {
+        inventory.addItem(item);
+        equipSlots->unequipItem(slot);
+    }
 }
 
 
@@ -88,7 +92,7 @@ bool Player::equipWeapon(Item& itemToEquip)
         equipSlots->equipItem(itemToEquip, targetSlot);
     }
 
-    inventory.remove(&itemToEquip);
+    inventory->remove(&itemToEquip);
     recalculateStats();
     return true;
 }
@@ -168,13 +172,6 @@ int Player::getEXPToLevel()
 }
 
 
-void Player::unequipToInventory(EQUIP_SLOT_TYPE slot)
-{
-    if (auto* item = equipSlots->getItemFromSlot(slot)) {
-        inventory.addItem(item);
-        equipSlots->unequipItem(slot);
-    }
-}
 
 
 

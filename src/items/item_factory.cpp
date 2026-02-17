@@ -112,7 +112,7 @@ Rarity ItemFactory::rollFromWeights(const RarityWeights& w, RNG& rng) {
 Rarity ItemFactory::rollRarity(const LootContext& ctx) {
     RarityWeights w = BASE_WEIGHTS;
     w = applyTierModifier(w, ctx.enemyTier);
-    w = applyLevelSaling(w, ctx.level);
+    w = applyLevelScaling(w, ctx.level);
     clampWeights(w);
 
     return rollFromWeights(w, ctx.rng);

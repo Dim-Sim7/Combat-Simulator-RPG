@@ -23,19 +23,19 @@ int LootableValue::setAmount(int amount)
     return amount_;
 }
 
-int LootableValue::weight() const override { return weight_; }
+int LootableValue::weight() const { return weight_; }
 void LootableValue::setWeight(int weight)
 {
     weight_ = weight;
 }
 
-bool LootableValue::isUnique() const override { return isUnique_; }
+bool LootableValue::isUnique() const { return isUnique_; }
 void LootableValue::setUnique(bool unique)
 {
     isUnique_ = unique;
 }
 
-bool LootableValue::isAlways() const override { return isAlways_; }
+bool LootableValue::isAlways() const { return isAlways_; }
 void LootableValue::setAlways(bool always)
 {
     isAlways_ = always;

@@ -12,7 +12,7 @@ Weapon::Weapon(std::string inName, int inId, int minDamage, int maxDamage, float
 
 [[nodiscard]] bool Weapon::isTwoHanded()
 {
-    switch (weaponType) {
+    switch (weaponType_) {
         case WEAPONTYPE::TWO_HAND_AXE:
         case WEAPONTYPE::TWO_HAND_MACE:
         case WEAPONTYPE::TWO_HAND_SWORD:
@@ -29,7 +29,7 @@ Weapon::Weapon(std::string inName, int inId, int minDamage, int maxDamage, float
 
 WEAPONTYPE Weapon::getWeaponType() const
 {
-    return weaponType;
+    return weaponType_;
 }
 
 

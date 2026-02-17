@@ -64,5 +64,5 @@
         "mutex": "cpp",
         "cassert": "cpp"
     },
-    "cmake.sourceDirectory": "/wsl.localhost/Ubuntu/home/dim-sim/workspace/Combat-Simulator-RPG"
+    "cmake.sourceDirectory": "/home/dim-sim/workspace/Combat-Simulator-RPG"
 }

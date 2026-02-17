@@ -1,7 +1,5 @@
 LOOT TABLE:
-    assign drop chances based on item
-    given the level on a monster, "drop" appropriate loot
-    loot data is saved on a csv. 
+
 
 RDS = random distribution system
 
@@ -9,7 +7,6 @@ WoW mob drop:
 gold (based on formula)
 crafting item (x-n)
 gear item (random gear)
-
 WoW boss drop:
 
 252 Gold
@@ -49,7 +46,7 @@ need to access enemy level, type to generate loot
 
 
 
-
+//TO DO
 
 
 

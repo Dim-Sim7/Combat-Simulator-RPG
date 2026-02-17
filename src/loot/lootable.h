@@ -1,5 +1,5 @@
 
-
+#pragma once 
 class Lootable {
 public:
     virtual ~Lootable() = default;

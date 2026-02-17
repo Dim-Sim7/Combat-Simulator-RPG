@@ -1,10 +1,13 @@
-#include "rng.h"
+#pragma once
 
+#include "rng.h"
+#include <optional>
 enum class EnemyTier {
     Normal,
     Elite,
     Boss
 };
+
 
 inline float tierScale(EnemyTier tier) {
     switch (tier) {

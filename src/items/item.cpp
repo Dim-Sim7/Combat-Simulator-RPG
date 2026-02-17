@@ -1,12 +1,12 @@
 #include "item.h"
 
 
-Item::Item() : name_(""), id(0), type_(ITEMTYPE::MISC), stackSize_(0), stackable_(false), statMod_{}, rarity_(Rarity::Common) {}
+Item::Item() : name_(""), id_(0), type_(ITEMTYPE::MISC), stackSize_(0), stackable_(false), statMod_{}, rarity_(Rarity::Common) {}
 
 Item::Item(std::string inName, int inId, ITEMTYPE inType, int inStackSize, bool inStackable)
 : name_(inName), id_(inId), type_(inType), stackSize_(inStackSize), stackable_(inStackable), statMod_{}, rarity_(Rarity::Common) {}
 
-Item::~Item() = default;
+//Item::~Item() = default;
 
 const StatModifier& Item::getStatModifier() const { return statMod_; }
 const std::string& Item::getName() const { return name_; }

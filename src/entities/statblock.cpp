@@ -13,7 +13,7 @@ StatBlock::StatBlock()
     , bonusDamage({0,0})
     , bonusArmor(0)
     , bonusCrit(0)
-    , bonusHealth(0);
+    , bonusHealth(0)
     
 {}
 

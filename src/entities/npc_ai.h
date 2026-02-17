@@ -1,28 +1,35 @@
 #pragma once
-#include <vector>
-#include <random>
 
+#include <string>
 
-enum class AIState{ Normal, Fleeing };
 class NPC;
 class Player;
+
+enum class AIState
+{
+    Normal,
+    Fleeing
+};
+
 class NPC_AI
 {
 public:
     NPC_AI(NPC* controlledNPC, Player* target);
-    void update(float currentTime);
-    
-private:
-    NPC* npc;
-    Player* player;
-    AIState state;
 
-    float fleeStartTime = -1.f;
+    void update(float currentTime);
+
+private:
     bool tryHeal(float time);
-    bool tryPotion();
+    bool tryPotion(float time);
     bool tryCastOffensive(float time);
 
     float randFloat();
-    bool chance(float p);
+    bool chance(float probability);
 
+private:
+    NPC* npc;
+    Player* player;
+
+    AIState state;
+    float fleeStartTime = 0.0f;
 };

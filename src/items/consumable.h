@@ -1,7 +1,7 @@
 #pragma once
 #include "item.h"
-#include "statsmod.h"
-#include "./definitions/consumable_def.h"
+#include "definitions/statsmod.h"
+#include "definitions/consumable_def.h"
 #include <cassert>
 
 //A consumable affects the player's stats. Increasing health, damage, armor.

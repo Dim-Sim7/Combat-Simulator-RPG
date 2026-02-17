@@ -2,7 +2,7 @@
 #include <cstdint>
 #include "item.h"
 #include "../entities/pointwell.h"
-#include "armor_def.h"
+#include "definitions/armor_def.h"
 
 
 class Armor: public Item {

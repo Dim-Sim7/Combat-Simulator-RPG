@@ -1,108 +1,143 @@
 #include "npc_ai.h"
-#include "player.h"
 #include "npc.h"
-#include "../loot/rng.h"
+#include "player.h"
+#include <iostream>
+#include <cstdlib>
+
 NPC_AI::NPC_AI(NPC* controlledNPC, Player* target)
-    : npc(controlledNPC), player(target), state(AIState::Normal) {}
+    : npc(controlledNPC),
+      player(target),
+      state(AIState::Normal)
+{
+}
 
 void NPC_AI::update(float currentTime)
 {
-    if (!npc || npc->isDead()) return;
+    if (!npc || npc->isDead())
+        return;
 
-    float hpPct = static_cast<float>(npc->getHP().getCurrent()) / npc->getHP().getMax();
+    if (npc->isOnGlobalCooldown(currentTime))
+        return;
 
-    //escape logic
+    float hpPct =
+        static_cast<float>(npc->getCurrentHP()) /
+        static_cast<float>(npc->getMaxHP());
+
+    // ==============================
+    // FLEE LOGIC
+    // ==============================
     if (hpPct < 0.15f && state != AIState::Fleeing)
     {
         state = AIState::Fleeing;
         fleeStartTime = currentTime;
     }
-        
-    
+
     if (state == AIState::Fleeing)
     {
-        std::cout << npc->getEntityName() << " is almost dead!\n";
-        if (currentTime - fleeStartTime > 2.5f || chance(0.05f))
+        std::cout << npc->getEntityName()
+                  << " is almost dead!\n";
+
+        if (currentTime - fleeStartTime > 2.5f ||
+            chance(0.05f))
         {
-            npc->escapeCombat();0
+            npc->escapeCombat();
             return;
         }
-        // Cannot act while Fleeing
-        continue;
+
+        // Cannot act while fleeing
+        return;
     }
 
-    //healing logic
+    // ==============================
+    // HEALING LOGIC
+    // ==============================
     if (hpPct <= 0.30f)
     {
         if (tryHeal(currentTime)) return;
-        if (tryPotion()) return;
+        if (tryPotion(currentTime)) return;
     }
 
-    // Offensive logic
-
+    // ==============================
+    // OFFENSIVE LOGIC
+    // ==============================
     float r = randFloat();
 
     if (r < 0.70f)
-        npc->attack(static_cast<Entity&>(*player), currentTime);
+    {
+        npc->attack(*player, currentTime);
+    }
     else
+    {
         tryCastOffensive(currentTime);
+    }
 }
-    
 
+// ======================================================
+// HEAL SPELL
+// ======================================================
 
 bool NPC_AI::tryHeal(float time)
 {
-    for (auto& spell : npc->getAbilities())
+    for (const auto& spell : npc->getAbilities())
     {
-        if(spell.getType() == ABILITYTYPE::HEAL && spell.isOffCD(time))
+        if (spell.getType() == ABILITYTYPE::HEAL)
         {
-            npc->castSpell(npc, spell, time);
+            npc->tryCastSpell(spell.getName(), npc, time);
             return true;
         }
     }
+
     return false;
 }
 
-bool NPC_AI::tryPotion()
+// ======================================================
+// POTION USE
+// ======================================================
+
+bool NPC_AI::tryPotion(float time)
 {
-    if (npc->hasPotion())
-    {
-        npc->usePotion();
-        return true;
-    }
-    return false;
+    // Assumes "Healing Potion" exists in Entity consumable system
+    return npc->tryUseConsumable("Healing Potion", time);
 }
+
+// ======================================================
+// OFFENSIVE SPELL SELECTION
+// ======================================================
 
 bool NPC_AI::tryCastOffensive(float time)
 {
-    Abilities* best = nullptr;
+    const Abilities* best = nullptr;
 
-    for (auto& spell: npc->getAbilities())
+    for (const auto& spell : npc->getAbilities())
     {
         if (spell.getType() == ABILITYTYPE::HEAL)
             continue;
 
-        if (!spell.isOffCD(time))
-            continue;
-        
-        if (!best || spell.getDamageRange().second > best->getDamageRange().second)
+        if (!best ||
+            spell.getAmountRange().second >
+            best->getAmountRange().second)
+        {
             best = &spell;
+        }
     }
 
     if (!best)
         return false;
-    
-    npc->castSpell(player, *best, time);
+
+    npc->tryCastSpell(best->getName(), player, time);
     return true;
 }
+
+// ======================================================
+// RNG
+// ======================================================
 
 float NPC_AI::randFloat()
 {
     return static_cast<float>(rand()) / RAND_MAX;
 }
 
-bool NPC_AI::chance(float p)
+bool NPC_AI::chance(float probability)
 {
-    return randFloat() < p;
+    return randFloat() < probability;
 }
-

@@ -19,8 +19,8 @@ struct LootRow {
 
 class LootTable {
 public:
-    explicit LootTable(const LootContext& ctx) {
-        readMasterTable(ctx);
+    explicit LootTable(const LootContext& ctx, const std::string& fileName = "master_loot_table.csv") {
+        readMasterTable(ctx, fileName);
         setItemsToHit(ctx);
     }
 
@@ -42,8 +42,8 @@ private:
     std::vector<LootRow> lootRows_;
     std::pair<int, int> itemsToHit_{0, 0};
 
-    void readMasterTable(const LootContext& ctx) {
-        std::ifstream file("master_loot_table.csv");
+    void readMasterTable(const LootContext& ctx, const std::string& fileName) {
+        std::ifstream file(fileName);
         if (!file.is_open()) {
             std::cerr << "Error opening loot table\n";
             return;

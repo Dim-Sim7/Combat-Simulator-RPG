@@ -12,7 +12,7 @@ heterogeneous loot types while maintaining type safety, correct virtual dispatch
 and automatic cleanup.
 */
 #include "lootable.h"
-
+#include <memory>
 class Container {
 public:
 

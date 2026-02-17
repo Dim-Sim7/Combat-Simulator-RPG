@@ -20,28 +20,36 @@ FetchContent_MakeAvailable(Catch2)
 # -----------------------------
 # Core library
 # -----------------------------
-add_library(combat_core
+set(ENTITY_SOURCES
     src/entities/statblock.cpp
     src/entities/pointwell.cpp
     src/entities/entity.cpp
     src/entities/player.cpp
     src/entities/npc.cpp
     src/entities/npc_ai.cpp
+)
 
+set(ITEM_SOURCES
     src/items/item.cpp
     src/items/armor.cpp
-    src/items/weapon.cpp 
+    src/items/weapon.cpp
     src/items/inventory.cpp
     src/items/equipslots.cpp
-    src/items/item_database.cpp 
-    src/items/item_factory.cpp 
+    src/items/item_database.cpp
+    src/items/item_factory.cpp
+)
 
-    src/loot/enemy_loot_filler.cpp 
-    src/loot/gold.cpp 
-    src/loot/lootable_value.cpp 
+set(LOOT_SOURCES
+    src/loot/enemy_loot_filler.cpp
+    src/loot/gold.cpp
+    src/loot/lootable_value.cpp
+)
 
+add_library(combat_core
+    ${ENTITY_SOURCES}
+    ${ITEM_SOURCES}
+    ${LOOT_SOURCES}
     src/battlesystem.cpp
-    
 )
 
 target_include_directories(combat_core PUBLIC src)
@@ -60,27 +68,24 @@ target_link_libraries(combat_sim PRIVATE combat_core)
 # -----------------------------
 enable_testing()
 
-add_executable(test_stat_block
+add_executable(combat_tests
     tests/test_stat_block.cpp
-)
-target_link_libraries(test_stat_block PRIVATE combat_core Catch2::Catch2WithMain)
-
-add_executable(test_pointwell
     tests/test_pointwell.cpp
-)
-target_link_libraries(test_pointwell PRIVATE combat_core Catch2::Catch2WithMain)
-
-add_executable(test_entity
     tests/test_entity.cpp
+    tests/test_items.cpp
+    tests/test_consumable.cpp
+    tests/test_itemfactory.cpp
+    tests/test_enemy_loot_filler.cpp
+    tests/test_loot_table.cpp
+    tests/test_lootable_value.cpp
 )
-target_link_libraries(test_entity PRIVATE combat_core Catch2::Catch2WithMain)
 
-add_executable(test_armor
-    tests/test_armor.cpp
+target_link_libraries(combat_tests
+    PRIVATE
+        combat_core
+        Catch2::Catch2WithMain
 )
-target_link_libraries(test_armor PRIVATE combat_core Catch2::Catch2WithMain)
 
-add_test(NAME StatBlockTests COMMAND test_stat_block)
-add_test(NAME PointwellTests COMMAND test_pointwell)
-add_test(NAME EntityTests COMMAND test_entity)
-add_test(NAME ArmorTests COMMAND test_armor)
+# Let Catch2 register tests with CTest automatically
+include(Catch)
+catch_discover_tests(combat_tests)

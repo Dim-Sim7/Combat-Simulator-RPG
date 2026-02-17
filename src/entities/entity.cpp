@@ -3,14 +3,21 @@
 #include <iostream>
 #include <random>
 
-Entity::Entity() :  stats(), HP(), abilities(), name(""){} //initialiser default list construction
+
+Entity::Entity() :  stats(), HP(), abilities(), name(""),     
+    inventory(std::make_unique<Inventory>()), 
+    equipSlots(std::make_unique<EquipSlots>()), 
+    aPool(std::make_unique<AbilitiesPool>()) {} //initialiser default list construction
 
 Entity::Entity(const StatBlock& statsInit, 
     const int hpInitCurr, 
     const int hpInitMax, 
     const std::vector<Abilities>& abilitiesInit,
     const std::string& inName)
-    : stats(statsInit), HP(hpInitMax, hpInitCurr), abilities(abilitiesInit), name(inName)
+    : stats(statsInit), HP(hpInitMax, hpInitCurr), abilities(abilitiesInit), name(inName),     
+    inventory(std::make_unique<Inventory>()), 
+    equipSlots(std::make_unique<EquipSlots>()), 
+    aPool(std::make_unique<AbilitiesPool>())
 {}
 
 std::string Entity::getEntityName() const { return name; }
@@ -22,6 +29,15 @@ void Entity::setEntityName(const std::string& inName)
 StatBlock& Entity::getStats() { return stats; }
 PointWell& Entity::getHP() { return HP; }
 std::vector<Abilities>& Entity::getAbilities() { return abilities; }
+Inventory* Entity::getInventory()
+{
+    return inventory.get();
+}
+
+const Inventory* Entity::getInventory() const
+{
+    return inventory.get();
+}
 
 const StatBlock& Entity::getStats() const { return stats; }
 const PointWell& Entity::getHP() const { return HP; }
@@ -47,11 +63,7 @@ int Entity::getCurrentHP() const { return HP.getCurrent(); }
 
 bool Entity::isDead() const
 {
-    if (HP.getCurrent() <= 0)
-    {
-        return true;
-    }
-    return false;
+    return HP.getCurrent() <= 0;
 }
 
 bool Entity::isCrit() const
@@ -60,6 +72,10 @@ bool Entity::isCrit() const
     static thread_local std::mt19937 gen(std::random_device{}());
     std::bernoulli_distribution crit(stats.getCritChance());
     return crit(gen);
+}
+bool Entity::isCasting() const
+{
+    return cast.isCasting;
 }
 
 void Entity::attack(Entity& target, float currentTime) //attack with base damage, will always have a target
@@ -134,6 +150,150 @@ void Entity::castSpell(Entity* target, Abilities& spell, float currentTime) //at
 
 }
 
+void Entity::tryCastSpell(const std::string& spellName,
+                          Entity* target,
+                          float now)
+{
+    if (now < nextGlobalCooldownEnd)
+    {
+        std::cout << "[Fail] On Global Cooldown. "
+                  << nextGlobalCooldownEnd - now
+                  << "s remaining.\n";
+        return;
+    }
+
+    for (int i = 0; i < abilities.size(); ++i)
+    {
+        if (abilities[i].getName() == spellName)
+        {
+            castSpell(target, abilities[i], now);
+            return;
+        }
+    }
+
+    std::cout << "[Fail] Spell not found.\n";
+}
+
+
+
+void Entity::applyConsumableEffect(const StatModifier& statMod)
+{
+    // Health buff
+    if (statMod.health.has_value()) {
+        this->heal(statMod.health.value());
+        std::cout << this->getEntityName() << " heals for " << statMod.health.value() << " HP!\n";
+        std::cout << this->getEntityName() << " HP: [" << this->getCurrentHP() << "/" << this->getMaxHP() << "]\n";
+    }
+
+    // Armor buff
+    if (statMod.armor.has_value()) {
+        this->getStats().increaseArmor(statMod.armor.value());
+        std::cout << this->getEntityName() << " gains " << statMod.armor.value() << " armor!\n";
+    }
+
+    // Crit buff
+    if (statMod.crit.has_value()) {
+        this->getStats().increaseCritChance(statMod.crit.value());
+        std::cout << this->getEntityName() << " gains " << statMod.crit.value() << " crit chance!\n";
+    }
+
+    // Damage buff
+    if (statMod.damage.has_value()) {
+        this->getStats().increaseDamage(statMod.damage.value());
+        std::cout << this->getEntityName() << " gains +" 
+                << statMod.damage.value().first << "-" << statMod.damage.value().second 
+                << " damage!\n";
+    }
+}
+
+bool Entity::tryUseConsumable(const std::string& name, float now)
+{
+    if (isOnGlobalCooldown(now))
+    {
+        std::cout << "[Fail] On Global Cooldown. "
+                  << getRemainingGCD(now)
+                  << "s remaining.\n";
+        return false;
+    }
+
+    auto const& items =
+        inventory->getItemsByType(ITEMTYPE::CONSUMABLE);
+
+    for (auto& it : items)
+    {
+        if (it->getName() == name)
+        {
+            std::cout << "[Use] " << name << "\n";
+
+            applyConsumableEffect(it->getStatModifier());
+            inventory->removeItem(it);
+
+            setNextGlobalCooldownEnd(now + getGlobalCooldown());
+            return true;
+        }
+    }
+
+    std::cout << "[Fail] Consumable not found.\n";
+    return false;
+}
+
+void Entity::resolveCast(float now) {
+    if (!cast.isCasting || cast.spell == nullptr)
+        return;
+
+    Abilities* spell = cast.spell;
+    Entity* target = cast.target;
+
+    // finish spell cast
+    spell->use(now);
+
+    //Damage spell
+    if (spell->isOffensive())
+    {
+        int dmg = spell->rollDamage();
+        if (this->isCrit()) dmg *= 2;
+
+        target->takeDamage(dmg);
+
+        std::cout << this->getEntityName() << " casts "
+                    << spell->getName()
+                    << " for " << dmg << " damage!\n";
+    }
+    else if (!(spell->isOffensive()))
+    {
+        int heal = spell->rollDamage();
+        if (this->isCrit()) heal *= 2;
+
+        this->heal(heal);
+
+        std::cout << this->getEntityName() << " casts "
+                    << spell->getName()
+                    << " that heals themselves for " << heal << "\n";            
+    }
+    else
+    {
+        std::cout << this->getEntityName()
+                << " finishes casting " << spell->getName() << ".\n";
+    }
+
+    
+    //trigger gcd
+    this->setNextGlobalCooldownEnd(now + this->getGlobalCooldown());
+
+    //Clear cast state
+    this->cast.isCasting = false;
+    this->cast.spell = nullptr;
+    this->cast.target = nullptr;
+}
+
+
+void Entity::update(float now)
+{
+    if (cast.isCasting && now >= cast.castEnd)
+    {
+        resolveCast(now);
+    }
+}
 
 void Entity::takeDamage(const int damage)
 {
@@ -142,9 +302,9 @@ void Entity::takeDamage(const int damage)
     HP.reduceCurrent(finalDamage);
 }
 
-void Entity::heal(const int heal)
+void Entity::heal(const int amount)
 {
-    HP.increaseCurrent(heal);
+    HP.increaseCurrent(amount);
 }
 
 float Entity::calcDamageReduction() const 
@@ -154,11 +314,12 @@ float Entity::calcDamageReduction() const
     return reduction;
 }
 
-void Entity::onDeath()
-{
-    std::cout << getEntityName() << " has died!" << '\n';
+bool Entity::isOnGlobalCooldown(double now) const {
+    return now < nextGlobalCooldownEnd;
 }
 
 
-
+bool Entity::isCasting() const {
+    return cast.isCasting;
+}
 

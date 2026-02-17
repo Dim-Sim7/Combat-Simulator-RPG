@@ -2,12 +2,14 @@
 #include "pointwell.h"
 #include "statblock.h"
 #include "../abilities/abilities.h"
+#include "../abilities/abilities_pool.h"
 #include <string>
-
+#include "../items/item.h"
 #include <memory>
 #include <vector>
 #include <random>
-
+#include "../items/equipslots.h"
+#include "../items/inventory.h"
 class Entity; //forward declaration
 struct CastState {
     bool isCasting = false;
@@ -17,7 +19,8 @@ struct CastState {
     Entity* target = nullptr;
 };
     
-
+class Inventory;
+class EquipSlots;
 /**
  * @brief Entity represents either a player or NPC.
  * Provides virtual methods to be implemented by children
@@ -45,6 +48,8 @@ public:
 
     int getMaxHP() const;
     int getCurrentHP() const;
+    Inventory* getInventory();
+    const Inventory* getInventory() const;
 
     void setStats(StatBlock inStats);
     void setHP(PointWell inHP);
@@ -52,7 +57,9 @@ public:
 
     bool isDead() const;
     bool isCrit() const;
-    void onDeath();
+    bool isCasting() const;
+
+    virtual void onDeath() = 0;
 
     void addAbility(const Abilities& ability);
 
@@ -61,10 +68,17 @@ public:
     
     void attack(Entity& target, float currentTime);
     void castSpell(Entity* target, Abilities& spell, float currentTime);
+    void tryCastSpell(const std::string& spellName, Entity* target, float now);
+
+    void applyConsumableEffect(const StatModifier& statMod);
+    bool tryUseConsumable(const std::string& name, float now);
+
+    void resolveCast(float now);
+    void update(float now);
 
     void takeDamage(const int damage);
     float calcDamageReduction() const;
-    void heal(const int heal);
+    void heal(const int amount);
 
     double getNextAutoAttackTime() const;
     void setNextAutoAttackTime(double t);
@@ -74,6 +88,8 @@ public:
 
     double getAttackSpeed() const;
     double getGlobalCooldown() const;
+    bool isOnGlobalCooldown(double now) const;
+
 
 
 
@@ -82,8 +98,12 @@ protected:
     PointWell HP; 
     std::vector<Abilities> abilities;
     std::string name;
-    
+     
+    CastState cast;
 
+    std::unique_ptr<Inventory> inventory;
+    std::unique_ptr<EquipSlots> equipSlots;
+    std::unique_ptr<AbilitiesPool> aPool;
     
     double nextAutoAttackTime{0.0};
     double nextGlobalCooldownEnd{0.0};

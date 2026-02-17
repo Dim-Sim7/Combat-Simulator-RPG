@@ -35,15 +35,18 @@ private:
     std::vector<Abilities> allAbilities;
 
     void loadAllAbilities() {
-        allAbilities = {
-            //name, dmgrng, cd, casttime, 
-            Abilities("Fireball", {100u, 150u}, 3, 2, 50, ability_t::CAST),
-            Abilities("Frostbolt", {80, 120}, 2, 2, 40, ability_t::CAST),
-            Abilities("Arcane Missiles", {50, 60}, 5, 5, 60, ability_t::CHANNEL),
-            Abilities("Ice Lance", {40, 70}, 1, 0, 20, ability_t::INSTANT),
-            Abilities("Renew", {100, 120}, 6, 2, 30, ability_t::HEAL),
-            Abilities("Corruption", {60, 100}, 3, 2, 35, ability_t::DOT),
-        };
+        // allAbilities = {
+        //     //name, dmgrng, cd, casttime, 
+        //     Abilities("Fireball", {100u, 150u}, 3, 2, 50, ability_t::CAST),
+        //     Abilities("Frostbolt", {80, 120}, 2, 2, 40, ability_t::CAST),
+        //     Abilities("Arcane Missiles", {50, 60}, 5, 5, 60, ability_t::CHANNEL),
+        //     Abilities("Ice Lance", {40, 70}, 1, 0, 20, ability_t::INSTANT),
+        //     Abilities("Renew", {100, 120}, 6, 2, 30, ability_t::HEAL),
+        //     Abilities("Corruption", {60, 100}, 3, 2, 35, ability_t::DOT),
+        // };
+
+        //ZZZ - TO DO <<<<<<
+        //read CSV file and make abilties from there
     }
 
     bool hasAbility(const Abilities& ability, const std::vector<Abilities>& owned) const {
